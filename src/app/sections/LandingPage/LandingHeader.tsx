@@ -24,7 +24,7 @@ export default function Header() {
           {/* Highlighted CTA button (Home) */}
           <a 
             href="#" 
-            className="px-3 py-1 rounded-full bg-yellow-400 text-gray-900 font-semibold hover:bg-yellow-500 transition-colors shadow-md"
+            className="px-3 py-1 rounded-[2rem] bg-yellow-400 text-gray-900 font-semibold hover:bg-yellow-500 transition-colors shadow-md"
           >
             Home
           </a>

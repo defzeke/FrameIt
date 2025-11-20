@@ -1,4 +1,4 @@
-export default function HeroSection() {
+export default function AboutUs() {
   const primaryBlue = '#4A90E2'; 
   const accentGreen = '#50E3C2';
 

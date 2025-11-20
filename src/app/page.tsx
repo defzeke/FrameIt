@@ -4,7 +4,7 @@
 // Imported Header, Footer, and the HeroSection components for code reusability
 import Header from '@/app/sections/LandingPage/LandingHeader'; 
 import Footer from '@/app/sections/LandingPage/LandingFooter' 
-import HeroSection from '@/app/sections/LandingPage/LandingHero'; 
+import AboutUs from '@/app/sections/LandingPage/AboutUs'; 
 
 export default function LandingPage() {
   return (
@@ -17,7 +17,7 @@ export default function LandingPage() {
       {/* 2. Main Content */}
       <main className="flex-grow">
         {/* Hero section content */}
-        <HeroSection /> 
+        <AboutUs /> 
         
         {/* For other contents: */}
 

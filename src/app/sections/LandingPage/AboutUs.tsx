@@ -1,5 +1,5 @@
 import Header from '@/app/components/Header';
-import Footer from '@/app/components/Footer';
+import LandingFooter from '@/app/sections/LandingPage/LandingFooter';
 
 export default function AboutUs() {
   const primaryBlue = '#4A90E2'; 
@@ -12,27 +12,28 @@ export default function AboutUs() {
 
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center py-16 overflow-hidden md:py-24">
-        <div className="max-w-7xl w-full mx-auto px-6 flex flex-col md:flex-row items-center justify-center md:justify-between gap-x-8">
+        <div className="max-w-5xl w-full mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-x-8">
         
         {/* =================================
             Left Side: The Overlapping Shapes 
             ================================= */}
-        <div className="relative w-full max-w-sm h-64 md:h-80 mb-10 md:mb-0 md:flex-shrink-0">
+        <div className="relative w-full max-w-sm h-64 md:h-80 mb-10 md:mb-0 md:flex-shrink-0 flex items-center">
           
           {/*  Green Square */}
           <div 
             style={{ 
               backgroundColor: accentGreen,
-              transform: 'rotate(-15.13deg) translate(-4px, 32px)' 
+              transform: 'rotate(-15.13deg) translate(40px, 32px)' 
             }}
             className="absolute w-64 h-64 shadow-xl opacity-90"
+            
           />
           
           {/* Blue Square */}
           <div 
             style={{ 
               backgroundColor: primaryBlue,
-              transform: 'rotate(-5.42deg) translate(80px, -20px)' 
+              transform: 'rotate(-5.42deg) translate(120px, -20px)' 
             }}
             className="absolute w-64 h-64 shadow-2xl"
           />
@@ -41,7 +42,7 @@ export default function AboutUs() {
         {/* =================================
             Right Side: The Headline Text
             ================================= */}
-        <div className="text-center md:text-left md:max-w-md"> 
+        <div className="text-center md:text-left md:max-w-md flex-shrink-0"> 
           <h2 
             // CHANGE: Re-added 'italic' class
             className="text-3xl sm:text-4xl font-extrabold text-gray-900 italic leading-tight" 
@@ -59,7 +60,7 @@ export default function AboutUs() {
       </main>
 
       {/* Footer */}
-      <Footer />
+      <LandingFooter />
     </div>
   );
 }

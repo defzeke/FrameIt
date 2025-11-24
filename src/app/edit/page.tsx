@@ -31,7 +31,6 @@ export default function EditImagePage() {
   const [shareUrl, setShareUrl] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
   
-  // Redirect to upload page if no image is loaded
   useEffect(() => {
     if (!imageUrl) {
       router.push('/upload');
@@ -39,6 +38,7 @@ export default function EditImagePage() {
   }, [imageUrl, router]);
   
   const primaryBlue = frameColor || '#4A90E2';
+  const accentGreen = '#50E3C2';
 
   const handleSave = async () => {
     setIsDownloading(true);
@@ -64,7 +64,6 @@ export default function EditImagePage() {
   const handleShare = async () => {
     if (!imageUrl) return;
     
-    // Generate temporary frameId if not exists
     let currentFrameId = frameId;
     if (!currentFrameId) {
       currentFrameId = generateTempFrameId();
@@ -73,9 +72,7 @@ export default function EditImagePage() {
     
     console.log('Sharing frame with ID:', currentFrameId);
     
-    // Save frame to localStorage
     try {
-      // Convert blob URL to base64 for persistent storage
       let imageData = imageUrl;
       if (imageUrl.startsWith('blob:')) {
         console.log('Converting blob URL to base64...');
@@ -87,7 +84,7 @@ export default function EditImagePage() {
       
       const frameData = {
         frameId: currentFrameId,
-        imageUrl: imageData, // Save base64 instead of blob URL
+        imageUrl: imageData,
         scale,
         rotate,
         caption,
@@ -99,11 +96,9 @@ export default function EditImagePage() {
       const saved = saveFrame(frameData);
       console.log('Frame saved:', saved);
       
-      // Verify it was saved
       const retrieved = JSON.parse(localStorage.getItem('frameit_frames') || '{}');
       console.log('Stored frames:', Object.keys(retrieved));
       
-      // Generate shareable URL
       const baseUrl = window.location.origin;
       const url = `${baseUrl}/user/${currentFrameId}`;
       setShareUrl(url);
@@ -114,7 +109,6 @@ export default function EditImagePage() {
     }
   };
   
-  // Temporary ID generator (will be replaced with API-generated ID)
   const generateTempFrameId = () => {
     return 'frame_' + Math.random().toString(36).substring(2, 11);
   };
@@ -126,10 +120,48 @@ export default function EditImagePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{
+      background: 'linear-gradient(to bottom, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)',
+    }}>
+      {/* Decorative dots pattern */}
+      <div 
+        className="absolute inset-0 opacity-10 pointer-events-none"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle at 20% 30%, ${primaryBlue} 2px, transparent 2px),
+            radial-gradient(circle at 80% 20%, ${accentGreen} 1.5px, transparent 1.5px),
+            radial-gradient(circle at 30% 70%, ${accentGreen} 1px, transparent 1px),
+            radial-gradient(circle at 75% 80%, ${primaryBlue} 2.5px, transparent 2.5px),
+            radial-gradient(circle at 10% 90%, ${primaryBlue} 1.5px, transparent 1.5px),
+            radial-gradient(circle at 90% 60%, ${accentGreen} 2px, transparent 2px)
+          `,
+          backgroundSize: '100px 100px, 150px 150px, 120px 120px, 180px 180px, 90px 90px, 110px 110px',
+          backgroundPosition: '0 0, 40px 40px, 80px 20px, 20px 60px, 60px 80px, 30px 30px'
+        }}
+      />
+
+      <div 
+        className="absolute w-64 h-64 rounded-full opacity-10 blur-3xl pointer-events-none"
+        style={{ 
+          backgroundColor: primaryBlue,
+          top: '15%',
+          left: '5%',
+          animation: 'floatSlow 12s ease-in-out infinite'
+        }}
+      />
+      <div 
+        className="absolute w-48 h-48 rounded-full opacity-10 blur-3xl pointer-events-none"
+        style={{ 
+          backgroundColor: accentGreen,
+          bottom: '20%',
+          right: '5%',
+          animation: 'floatSlow 15s ease-in-out infinite 3s'
+        }}
+      />
+
       <Header />
 
-      <main className="grow py-12 px-6">
+      <main className="grow py-12 px-6 relative z-10">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start lg:pl-2">
             

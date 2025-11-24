@@ -1,5 +1,3 @@
-// Reusable input component for login and signup pages
-
 import React from 'react';
 
 interface InputProps {

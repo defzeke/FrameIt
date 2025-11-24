@@ -3,22 +3,18 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface FrameData {
-  // Uploaded image data
   imageFile: File | null;
   imageUrl: string | null;
   
-  // Frame settings
   scale: number;
   rotate: number;
   frameColor: string;
   caption: string;
   
-  // Shareable frame ID (for saved frames)
   frameId: string | null;
 }
 
 interface FrameContextType extends FrameData {
-  // Setters
   setImageFile: (file: File | null) => void;
   setImageUrl: (url: string | null) => void;
   setScale: (scale: number) => void;
@@ -27,7 +23,6 @@ interface FrameContextType extends FrameData {
   setCaption: (caption: string) => void;
   setFrameId: (id: string | null) => void;
   
-  // Utility functions
   resetFrame: () => void;
   loadFrame: (data: Partial<FrameData>) => void;
 }
@@ -50,7 +45,6 @@ export function FrameProvider({ children }: { children: ReactNode }) {
   const setImageFile = (file: File | null) => {
     setFrameData(prev => ({ ...prev, imageFile: file }));
     
-    // Automatically create object URL for preview
     if (file) {
       const url = URL.createObjectURL(file);
       setFrameData(prev => ({ ...prev, imageUrl: url }));
@@ -82,7 +76,6 @@ export function FrameProvider({ children }: { children: ReactNode }) {
   };
 
   const resetFrame = () => {
-    // Revoke object URL to prevent memory leaks
     if (frameData.imageUrl && frameData.imageFile) {
       URL.revokeObjectURL(frameData.imageUrl);
     }
@@ -113,7 +106,6 @@ export function FrameProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Custom hook for using the frame context
 export function useFrame() {
   const context = useContext(FrameContext);
   if (context === undefined) {

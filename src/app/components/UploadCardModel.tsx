@@ -3,12 +3,10 @@
 import CloudUploadIcon from './CloudUpload';
 import YellowButton from './YellowButton';
 import React, { useState, useCallback } from 'react';
-// ===============================================================================================
 
-// Validation constants
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-const MIN_DIMENSION = 100; // 100px minimum
-const MAX_DIMENSION = 8000; // 8000px maximum
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MIN_DIMENSION = 100;
+const MAX_DIMENSION = 8000;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/jpg'];
 
 export interface UploadCardModelProps {
@@ -20,24 +18,19 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
     const [isValidating, setIsValidating] = useState(false);
 
-    // Use the file name from the parent state if only available
     const fileName = uploadedFile?.name || null;
 
-    // Function to show a status message
     const showStatus = (message: string, type: 'error' | 'success' = 'error') => {
         setStatusMessage(message);
         setTimeout(() => setStatusMessage(null), type === 'error' ? 4000 : 3000);
     };
 
-    // Comprehensive file validation
     const validateFile = useCallback(async (file: File): Promise<boolean> => {
-        // Check file type
         if (!ALLOWED_TYPES.includes(file.type)) {
             showStatus('Invalid file type. Please upload JPG or PNG images only.');
             return false;
         }
 
-        // Check file size
         if (file.size > MAX_FILE_SIZE) {
             showStatus(`File too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)}MB.`);
             return false;
@@ -48,7 +41,6 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
             return false;
         }
 
-        // Check image dimensions
         try {
             const dimensions = await getImageDimensions(file);
             
@@ -69,7 +61,6 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
         }
     }, []);
 
-    // Helper function to get image dimensions
     const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
         return new Promise((resolve, reject) => {
             const img = new Image();
@@ -88,8 +79,6 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
             img.src = url;
         });
     };
-
-    // --- Drag/Drop Handlers (Typed for HTMLLabelElement) ---
 
     const handleDragOver = useCallback((e: React.DragEvent<HTMLLabelElement>) => {
         e.preventDefault();
@@ -127,7 +116,6 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
         }
     }, [onFileDrop, validateFile]);
 
-    // Handles file selection via the hidden input
     const handleFileSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -140,14 +128,9 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
             onFileDrop(file);
         }
         
-        // Reset input to allow selecting the same file again
         e.target.value = '';
     }, [onFileDrop, validateFile]);
 
-
-    // --- Styling Classes ---
-    
-    // Gradient for the large oval drop zone
     const ovalGradient = 'linear-gradient(90deg, #f0fdf4 0%, #ffffff 100%)';
     
     const dropZoneClasses = `
@@ -172,9 +155,6 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
                 </div>
             )}
             
-            {/*
-                Clicking anywhere on this entire card will open the file explorer.
-            */}
             <label 
                 htmlFor="file-upload"
                 className={dropZoneClasses}

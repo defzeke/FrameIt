@@ -6,11 +6,6 @@ interface DownloadOptions {
   quality?: number;
 }
 
-/**
- * Download a frame by capturing the DOM element as an image
- * @param elementId - The ID of the element to capture
- * @param options - Download options (filename, format, quality)
- */
 export const downloadFrame = async (
   elementId: string,
   options: DownloadOptions = {}
@@ -29,7 +24,6 @@ export const downloadFrame = async (
       return false;
     }
 
-    // Capture the element as canvas
     const canvas = await html2canvas(element, {
       backgroundColor: null,
       scale: 2,
@@ -39,7 +33,6 @@ export const downloadFrame = async (
       foreignObjectRendering: false,
     });
 
-    // Convert canvas to blob
     const blob = await new Promise<Blob | null>((resolve) => {
       canvas.toBlob(
         (blob) => resolve(blob),
@@ -53,18 +46,15 @@ export const downloadFrame = async (
       return false;
     }
 
-    // Create download link
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = `${filename}.${format}`;
     
-    // Trigger download
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     
-    // Cleanup
     URL.revokeObjectURL(url);
     
     return true;
@@ -74,9 +64,6 @@ export const downloadFrame = async (
   }
 };
 
-/**
- * Download frame with custom dimensions
- */
 export const downloadFrameWithDimensions = async (
   elementId: string,
   width: number,
@@ -97,7 +84,6 @@ export const downloadFrameWithDimensions = async (
       return false;
     }
 
-    // Capture with specific dimensions
     const canvas = await html2canvas(element, {
       backgroundColor: null,
       width,

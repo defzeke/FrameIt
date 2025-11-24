@@ -1,5 +1,3 @@
-// sign-up page component
-
 import Card from '@/app/components/Card'; 
 import Input from '@/app/components/Input';
 

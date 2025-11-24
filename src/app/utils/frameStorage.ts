@@ -1,9 +1,7 @@
-// Frame storage utility using localStorage
-
 export interface SavedFrame {
   frameId: string;
   imageUrl: string;
-  imageData?: string; // Base64 encoded image for persistence
+  imageData?: string;
   scale: number;
   rotate: number;
   caption: string;
@@ -13,7 +11,6 @@ export interface SavedFrame {
 
 const STORAGE_KEY = 'frameit_frames';
 
-// Save a frame to localStorage
 export const saveFrame = (frame: SavedFrame): boolean => {
   try {
     const frames = getAllFrames();
@@ -26,7 +23,6 @@ export const saveFrame = (frame: SavedFrame): boolean => {
   }
 };
 
-// Get a specific frame by ID
 export const getFrame = (frameId: string): SavedFrame | null => {
   try {
     const frames = getAllFrames();
@@ -37,7 +33,6 @@ export const getFrame = (frameId: string): SavedFrame | null => {
   }
 };
 
-// Get all frames
 export const getAllFrames = (): Record<string, SavedFrame> => {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
@@ -48,7 +43,6 @@ export const getAllFrames = (): Record<string, SavedFrame> => {
   }
 };
 
-// Delete a frame
 export const deleteFrame = (frameId: string): boolean => {
   try {
     const frames = getAllFrames();
@@ -61,7 +55,6 @@ export const deleteFrame = (frameId: string): boolean => {
   }
 };
 
-// Convert File/Blob to base64 for storage
 export const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

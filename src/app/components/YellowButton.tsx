@@ -1,6 +1,5 @@
 "use client"
 
-// Reusable Yellow Button component
 interface YellowButtonProps {
   children: React.ReactNode;
   onClick?: () => void;

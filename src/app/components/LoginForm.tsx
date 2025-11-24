@@ -1,5 +1,3 @@
-//This is the login page
-
 import Card from '@/app/components/Card'; 
 import Input from '@/app/components/Input';
 import YellowButton from '@/app/components/YellowButton'; 

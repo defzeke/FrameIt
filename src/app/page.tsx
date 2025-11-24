@@ -21,7 +21,7 @@ export default function LandingPage() {
   }, []);
   
   const handleGetStarted = () => {
-    router.push('/upload');
+    router.push('/login');
   };
 
   return (
@@ -286,7 +286,7 @@ export default function LandingPage() {
                 description="Show your framed photos with friends, family or online. The ready-made frames makes sharing your memories quick, fun, and eye-catching."
                 icon={Share2}
                 borderColor={primaryBlue}
-                iconColor={accentGreen}
+                iconColor={primaryBlue}
               />
             </div>
 

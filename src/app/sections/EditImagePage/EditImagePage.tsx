@@ -57,7 +57,6 @@ export default function EditImagePage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start lg:pl-2">
             
-            {/* Left Side: Frame Preview */}
             <div className="flex flex-col items-center gap-6">
               <FramePreview
                 imageUrl={imageUrl}
@@ -66,7 +65,6 @@ export default function EditImagePage() {
                 frameColor={primaryBlue}
               />
               
-              {/* Change Frame Button */}
               <YellowButton 
                 size="lg"
                 onClick={handleChangeFrame}
@@ -75,7 +73,6 @@ export default function EditImagePage() {
               </YellowButton>
             </div>
 
-            {/* Right Side: Control Panel */}
             <div className="flex items-center justify-center lg:justify-start lg:pl-4">
               <div className="w-full max-w-md">
                 <ControlPanel

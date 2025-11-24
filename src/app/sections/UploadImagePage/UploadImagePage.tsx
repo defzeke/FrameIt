@@ -19,7 +19,6 @@ export default function App() {
         console.log("File received:", file.name);
         setImageFile(file);
         
-        // Navigate to edit page after successful upload
         setTimeout(() => {
             router.push('/sections/EditImagePage');
         }, 500);
@@ -31,24 +30,20 @@ export default function App() {
             {/* 1. NavBar
             <Header />  Uncomment this if the Header is available to be imported */}
             
-            {/* Main Content Area */}
-            <main className="flex-grow flex flex-col items-center justify-center p-4">
+            <main className="grow flex flex-col items-center justify-center p-4">
                 
-                {/* Status Message */}
                 {imageFile && (
                     <div className="mb-8 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded-lg max-w-xl w-full text-center font-medium shadow-md">
                         Successfully selected: **{imageFile.name}** ({Math.round(imageFile.size / 1024)} KB). Redirecting to editor...
                     </div>
                 )}
 
-                {/* 2. Upload Card (Exportable) */}
                 <UploadCardModel 
                     onFileDrop={handleFileDrop}
                     uploadedFile={imageFile}
                 />
             </main>
 
-            {/* 3. Bottom Label / Footer */}
             <Footer />
         </div>
     );

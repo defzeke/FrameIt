@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useFrame } from '@/app/contexts/FrameContext';
 import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
 import FramePreview from '@/app/components/FramePreview';
@@ -10,11 +10,18 @@ import TextArea from '@/app/components/TextArea';
 import CarouselSection from '@/app/components/CarouselSection';
 
 export default function UserPage() {
-  const [scale, setScale] = useState(100);
-  const [rotate, setRotate] = useState(0);
-  const [caption, setCaption] = useState('');
+  const {
+    imageUrl,
+    scale,
+    rotate,
+    caption,
+    frameColor,
+    setScale,
+    setRotate,
+    setCaption,
+  } = useFrame();
   
-  const primaryBlue = '#4A90E2';
+  const primaryBlue = frameColor || '#4A90E2';
 
   const handleDownload = () => {
     console.log('Downloading frame');
@@ -34,7 +41,7 @@ export default function UserPage() {
             
             <div className="flex flex-col items-center gap-6">
               <FramePreview
-                imageUrl=""
+                imageUrl={imageUrl || ''}
                 scale={scale}
                 rotate={rotate}
                 frameColor={primaryBlue}

@@ -1,5 +1,6 @@
 "use client";
 
+import Header from '@/app/components/Header'
 
 // Use this Header import from the LandingPage directory
 // import Header from '../LandingPage/LandingHeader'
@@ -27,8 +28,8 @@ export default function App() {
     return (
         <div className="min-h-screen flex flex-col bg-gray-50 font-sans">
             
-            {/* 1. NavBar
-            <Header />  Uncomment this if the Header is available to be imported */}
+
+            <Header />
             
             <main className="grow flex flex-col items-center justify-center p-4">
                 

@@ -37,8 +37,6 @@ export default function ShareModal({ isOpen, onClose, shareUrl }: ShareModalProp
       onClick={handleBackdropClick}
     >
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-in fade-in zoom-in duration-200">
-        
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
@@ -47,14 +45,12 @@ export default function ShareModal({ isOpen, onClose, shareUrl }: ShareModalProp
           <X className="w-6 h-6" />
         </button>
 
-        {/* Icon */}
         <div className="flex justify-center mb-4">
           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
             <Share2 className="w-8 h-8 text-blue-600" />
           </div>
         </div>
 
-        {/* Title */}
         <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">
           Share Your Frame
         </h2>

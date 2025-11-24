@@ -120,9 +120,9 @@ export default function EditImagePage() {
   };
 
   const handleChangeFrame = () => {
-    // TODO: Implement frame selection
-    console.log('Opening frame selector');
-    // Future: Open modal to select different frame styles
+    if (confirm('Do you want to upload a new frame? Current progress will be lost.')) {
+      router.push('/sections/UploadImagePage');
+    }
   };
 
   return (

@@ -24,7 +24,6 @@ export default function FramePreview({
           padding: '24px'
         }}
       >
-        {/* Inner white area where image/placeholder goes */}
         <div className="w-full h-full bg-white flex items-center justify-center overflow-hidden">
           {imageUrl ? (
             <img 

@@ -32,9 +32,11 @@ export const downloadFrame = async (
     // Capture the element as canvas
     const canvas = await html2canvas(element, {
       backgroundColor: null,
-      scale: 2, // Higher quality (2x resolution)
+      scale: 2,
       logging: false,
-      useCORS: true, // Allow cross-origin images
+      useCORS: true,
+      allowTaint: true,
+      foreignObjectRendering: false,
     });
 
     // Convert canvas to blob

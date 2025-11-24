@@ -166,7 +166,6 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
 
     return (
         <div className="w-full p-8 md:p-16">
-            {/* Temporary Status Message Modal */}
             {statusMessage && (
                 <div className="fixed top-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-xl z-50 transition-opacity duration-300">
                     {statusMessage}
@@ -187,7 +186,6 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
             >
-                {/* Cloud Icon */}
                 <CloudUploadIcon className={`w-32 h-32 mb-6 ${isValidating ? 'text-blue-500 animate-pulse' : isDragging || fileName ? 'text-teal-500' : 'text-teal-400'}`} />
                 
                 <p className="text-3xl font-bold text-gray-700 mb-2">
@@ -198,16 +196,14 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
                 </p>
             </label>
 
-            {/* Opens the file explorer */}
             <input 
-                id="file-upload" // Linked by the label's htmlFor
+                id="file-upload"
                 type="file" 
                 accept=".jpg,.jpeg,.png"
                 onChange={handleFileSelect} 
                 className="hidden" 
             />
 
-            {/* Visible Browse Button */}
             <div className="text-center mt-8">
                 <YellowButton 
                     size="lg" 

@@ -11,6 +11,10 @@ export default function LandingPage() {
   const router = useRouter();
   const primaryBlue = '#4A90E2'; 
   const accentGreen = '#50E3C2';
+
+  if (typeof document !== 'undefined') {
+    document.documentElement.style.scrollBehavior = 'smooth';
+  }
   
   const handleGetStarted = () => {
     // TODO: Navigate to login page when ready
@@ -63,9 +67,9 @@ export default function LandingPage() {
             background: 'linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.8) 50%, white 100%)'
           }}
         />
-      </section>a
+      </section>
 
-      <section className="py-16 md:py-24 bg-white overflow-hidden">
+      <section id="about-us" className="py-16 md:py-24 bg-white overflow-hidden scroll-mt-16">
         <div className="max-w-5xl w-full mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-x-8">
         
 
@@ -106,8 +110,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-
-      <section className="py-16 md:py-20 bg-white">
+      <section id="features" className="py-16 md:py-20 bg-white scroll-mt-16">
         <div className="max-w-7xl mx-auto px-6">
 
           <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-black">

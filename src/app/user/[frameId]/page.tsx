@@ -52,16 +52,63 @@ export default function SharedFramePage() {
   }, [frameId]);
 
   const handleDownload = async () => {
+    if (!frame) return;
+    
     setIsDownloading(true);
     try {
-      const success = await downloadFrame('frame-preview', {
-        filename: `frameit-${frameId}`,
-        format: 'png'
-      });
-      
-      if (!success) {
-        alert('Failed to download frame. Please try again.');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Could not get canvas context');
+
+      const size = 1200;
+      canvas.width = size;
+      canvas.height = size;
+
+      // Load user image if exists
+      if (userImage) {
+        const userImg = new Image();
+        userImg.crossOrigin = 'anonymous';
+        await new Promise((resolve, reject) => {
+          userImg.onload = resolve;
+          userImg.onerror = reject;
+          userImg.src = userImage;
+        });
+
+        ctx.save();
+        ctx.translate(size / 2, size / 2);
+        ctx.rotate((userRotate * Math.PI) / 180);
+        ctx.scale(userScale / 100, userScale / 100);
+        ctx.drawImage(userImg, -size / 2, -size / 2, size, size);
+        ctx.restore();
+      } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, size, size);
       }
+
+      // Load and draw frame overlay
+      const frameImg = new Image();
+      frameImg.crossOrigin = 'anonymous';
+      await new Promise((resolve, reject) => {
+        frameImg.onload = resolve;
+        frameImg.onerror = reject;
+        frameImg.src = frame.imageUrl;
+      });
+      ctx.drawImage(frameImg, 0, 0, size, size);
+
+      // Convert to blob and download
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          alert('Failed to create image');
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `frameit-${frameId}.png`;
+        link.click();
+        URL.revokeObjectURL(url);
+      }, 'image/png');
+
     } catch (error) {
       console.error('Download error:', error);
       alert('Failed to download frame. Please try again.');
@@ -125,7 +172,6 @@ export default function SharedFramePage() {
       <main className="grow py-12 px-6">
         <div className="max-w-7xl mx-auto">
           
-          {/* Shared Frame Banner */}
           <div className="mb-8 text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
               Customize This Frame
@@ -137,10 +183,8 @@ export default function SharedFramePage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             
-            {/* Left: Twibbonize-style Layered Frame */}
             <div className="flex flex-col items-center gap-6">
-              <div className="relative w-[360px] h-[360px] md:w-[420px] md:h-[420px] shadow-2xl">
-                {/* Layer 1: Background - User's photo */}
+              <div id="frame-preview" className="relative w-[360px] h-[360px] md:w-[420px] md:h-[420px] shadow-2xl">
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100 overflow-hidden">
                   {userImage ? (
                     <img 
@@ -159,7 +203,6 @@ export default function SharedFramePage() {
                   )}
                 </div>
                 
-                {/* Layer 2: Foreground - Frame overlay (always visible) */}
                 <div className="absolute inset-0 pointer-events-none z-10">
                   <img 
                     src={frame.imageUrl}

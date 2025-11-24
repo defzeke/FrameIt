@@ -44,7 +44,6 @@ export default function ControlPanel({
         step={1}
       />
 
-      {/* Rotate Slider */}
       <Slider
         label="Rotate"
         value={rotate}

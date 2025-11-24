@@ -30,7 +30,7 @@ export default function YellowButton({
     <button
       type={type}
       onClick={onClick}
-      className={`${sizeClasses[size]} ${roundedClass} font-bold bg-yellow-400 text-gray-900 hover:bg-yellow-500 transition-colors shadow-md ${className}`}
+      className={`${sizeClasses[size]} ${roundedClass} font-bold bg-yellow-400 text-gray-900 hover:bg-yellow-500 transition-colors shadow-md cursor-pointer ${className}`}
     >
       {children}
     </button>

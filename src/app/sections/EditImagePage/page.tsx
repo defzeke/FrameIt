@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFrame } from '@/app/contexts/FrameContext';
 import Header from '@/app/components/Header';
@@ -8,6 +8,7 @@ import Footer from '@/app/components/Footer';
 import FramePreview from '@/app/components/FramePreview';
 import ControlPanel from '@/app/components/ControlPanel';
 import YellowButton from '@/app/components/YellowButton';
+import ShareModal from '@/app/components/ShareModal';
 
 export default function EditImagePage() {
   const router = useRouter();
@@ -17,10 +18,15 @@ export default function EditImagePage() {
     rotate, 
     caption, 
     frameColor,
+    frameId,
     setScale, 
     setRotate, 
-    setCaption 
+    setCaption,
+    setFrameId
   } = useFrame();
+  
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
   
   // Redirect to upload page if no image is loaded
   useEffect(() => {
@@ -38,9 +44,23 @@ export default function EditImagePage() {
   };
 
   const handleShare = () => {
-    // TODO: Implement share functionality
-    console.log('Sharing frame with caption:', caption);
-    // Future: Generate shareable link
+    // Generate temporary frameId if not exists (in future, this will come from API)
+    let currentFrameId = frameId;
+    if (!currentFrameId) {
+      currentFrameId = generateTempFrameId();
+      setFrameId(currentFrameId);
+    }
+    
+    // Generate shareable URL
+    const baseUrl = window.location.origin;
+    const url = `${baseUrl}/user/${currentFrameId}`;
+    setShareUrl(url);
+    setShowShareModal(true);
+  };
+  
+  // Temporary ID generator (will be replaced with API-generated ID)
+  const generateTempFrameId = () => {
+    return 'frame_' + Math.random().toString(36).substring(2, 11);
   };
 
   const handleChangeFrame = () => {
@@ -59,7 +79,7 @@ export default function EditImagePage() {
             
             <div className="flex flex-col items-center gap-6">
               <FramePreview
-                imageUrl={imageUrl}
+                imageUrl={imageUrl || undefined}
                 scale={scale}
                 rotate={rotate}
                 frameColor={primaryBlue}
@@ -94,6 +114,12 @@ export default function EditImagePage() {
       </main>
 
       <Footer />
+      
+      <ShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        shareUrl={shareUrl}
+      />
     </div>
   );
 }

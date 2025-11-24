@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from 'next/navigation';
 import Header from '@/app/components/Header';
 import LandingFooter from '@/app/sections/LandingPage/LandingFooter';
 import YellowButton from '@/app/components/YellowButton';
@@ -5,8 +8,15 @@ import FeatureCard from '@/app/components/FeatureCard';
 import { Wand2, Zap, Share2 } from 'lucide-react';
 
 export default function LandingPage() {
+  const router = useRouter();
   const primaryBlue = '#4A90E2'; 
   const accentGreen = '#50E3C2';
+  
+  const handleGetStarted = () => {
+    // TODO: Navigate to login page when ready
+    // For now, go directly to upload
+    router.push('/sections/UploadImagePage');
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -42,7 +52,7 @@ export default function LandingPage() {
           <p className="text-xl sm:text-2xl text-black mb-8 font-medium">
             Create, customize, and be post-ready.
           </p>
-          <YellowButton size="lg">
+          <YellowButton size="lg" onClick={handleGetStarted}>
             Get Started
           </YellowButton>
         </div>

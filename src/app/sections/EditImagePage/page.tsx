@@ -9,6 +9,7 @@ import FramePreview from '@/app/components/FramePreview';
 import ControlPanel from '@/app/components/ControlPanel';
 import YellowButton from '@/app/components/YellowButton';
 import ShareModal from '@/app/components/ShareModal';
+import { saveFrame, fileToBase64 } from '@/app/utils/frameStorage';
 
 export default function EditImagePage() {
   const router = useRouter();
@@ -43,19 +44,39 @@ export default function EditImagePage() {
     // Future: Save to database and get frameId
   };
 
-  const handleShare = () => {
-    // Generate temporary frameId if not exists (in future, this will come from API)
+  const handleShare = async () => {
+    if (!imageUrl) return;
+    
+    // Generate temporary frameId if not exists
     let currentFrameId = frameId;
     if (!currentFrameId) {
       currentFrameId = generateTempFrameId();
       setFrameId(currentFrameId);
     }
     
-    // Generate shareable URL
-    const baseUrl = window.location.origin;
-    const url = `${baseUrl}/user/${currentFrameId}`;
-    setShareUrl(url);
-    setShowShareModal(true);
+    // Save frame to localStorage
+    try {
+      const frameData = {
+        frameId: currentFrameId,
+        imageUrl: imageUrl,
+        scale,
+        rotate,
+        caption,
+        frameColor: frameColor || '#4A90E2',
+        createdAt: new Date().toISOString(),
+      };
+      
+      saveFrame(frameData);
+      
+      // Generate shareable URL
+      const baseUrl = window.location.origin;
+      const url = `${baseUrl}/user/${currentFrameId}`;
+      setShareUrl(url);
+      setShowShareModal(true);
+    } catch (error) {
+      console.error('Failed to save frame:', error);
+      alert('Failed to create shareable link. Please try again.');
+    }
   };
   
   // Temporary ID generator (will be replaced with API-generated ID)

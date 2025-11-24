@@ -34,7 +34,7 @@ export default function EditImagePage() {
   // Redirect to upload page if no image is loaded
   useEffect(() => {
     if (!imageUrl) {
-      router.push('/sections/UploadImagePage');
+      router.push('/upload');
     }
   }, [imageUrl, router]);
   
@@ -121,7 +121,7 @@ export default function EditImagePage() {
 
   const handleChangeFrame = () => {
     if (confirm('Do you want to upload a new frame? Current progress will be lost.')) {
-      router.push('/sections/UploadImagePage');
+      router.push('/upload');
     }
   };
 

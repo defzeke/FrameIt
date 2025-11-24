@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 
-export default function Footer() {
+export default function LandingFooter() {
   const router = useRouter();
   const pathname = usePathname();
   const currentYear = new Date().getFullYear();
@@ -48,8 +48,8 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-2 text-white">Support</h4>
             <ul className="space-y-1">
-              <li><a href="#" className="hover:text-gray-300">Report an Issue</a></li>
-              <li><a href="#" className="hover:text-gray-300">Help Center</a></li>
+              <li><a href="#" className="hover:text-gray-300 cursor-pointer">Report an Issue</a></li>
+              <li><a href="#" className="hover:text-gray-300 cursor-pointer">Help Center</a></li>
             </ul>
           </div>
 
@@ -59,7 +59,7 @@ export default function Footer() {
               <li>
                 <a 
                   href={`mailto:${contactEmail}`} 
-                  className="hover:text-gray-300"
+                  className="hover:text-gray-300 cursor-pointer"
                 >
                   Email
                 </a>

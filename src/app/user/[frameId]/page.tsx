@@ -23,13 +23,11 @@ export default function SharedFramePage() {
   const [notFound, setNotFound] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   
-  // User's customization (separate from template)
   const [userImage, setUserImage] = useState<string>('');
   const [userScale, setUserScale] = useState(100);
   const [userRotate, setUserRotate] = useState(0);
   const [userCaption, setUserCaption] = useState('');
 
-  // Load frame data on mount
   useEffect(() => {
     if (!frameId) {
       setNotFound(true);
@@ -37,12 +35,11 @@ export default function SharedFramePage() {
       return;
     }
 
-    // Fetch frame from localStorage
     const savedFrame = getFrame(frameId);
     
     if (savedFrame) {
       setFrame(savedFrame);
-      // Pre-populate with template's caption
+
       setUserCaption(savedFrame.caption);
     } else {
       setNotFound(true);
@@ -64,7 +61,6 @@ export default function SharedFramePage() {
       canvas.width = size;
       canvas.height = size;
 
-      // Load user image if exists
       if (userImage) {
         const userImg = new Image();
         userImg.crossOrigin = 'anonymous';
@@ -85,7 +81,6 @@ export default function SharedFramePage() {
         ctx.fillRect(0, 0, size, size);
       }
 
-      // Load and draw frame overlay
       const frameImg = new Image();
       frameImg.crossOrigin = 'anonymous';
       await new Promise((resolve, reject) => {
@@ -95,7 +90,6 @@ export default function SharedFramePage() {
       });
       ctx.drawImage(frameImg, 0, 0, size, size);
 
-      // Convert to blob and download
       canvas.toBlob((blob) => {
         if (!blob) {
           alert('Failed to create image');
@@ -130,7 +124,7 @@ export default function SharedFramePage() {
   };
 
   const handleCreateYourOwn = () => {
-    router.push('/sections/UploadImagePage');
+    router.push('/upload');
   };
 
   if (loading) {

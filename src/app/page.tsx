@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import Header from '@/app/components/Header';
-import LandingFooter from '@/app/sections/LandingPage/LandingFooter';
+import LandingFooter from '@/app/components/LandingFooter';
 import YellowButton from '@/app/components/YellowButton';
 import FeatureCard from '@/app/components/FeatureCard';
 import { Wand2, Zap, Share2 } from 'lucide-react';
@@ -17,9 +17,7 @@ export default function LandingPage() {
   }
   
   const handleGetStarted = () => {
-    // TODO: Navigate to login page when ready
-    // For now, go directly to upload
-    router.push('/sections/UploadImagePage');
+    router.push('/upload');
   };
 
   return (

@@ -6,7 +6,7 @@ import Header from '@/app/components/Header'
 // import Header from '../LandingPage/LandingHeader'
 
 import Footer from '@/app/components/Footer';
-import { UploadCardModel } from '../../components/UploadCardModel';
+import { UploadCardModel } from '@/app/components/UploadCardModel';
 import React, { useCallback } from 'react';
 import { useFrame } from '@/app/contexts/FrameContext';
 import { useRouter } from 'next/navigation';
@@ -21,7 +21,7 @@ export default function App() {
         setImageFile(file);
         
         setTimeout(() => {
-            router.push('/sections/EditImagePage');
+            router.push('/edit');
         }, 500);
     }, [setImageFile, router]);
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import Header from '@/app/components/Header';
 import LandingFooter from '@/app/components/LandingFooter';
 import YellowButton from '@/app/components/YellowButton';
@@ -12,9 +13,12 @@ export default function LandingPage() {
   const primaryBlue = '#4A90E2'; 
   const accentGreen = '#50E3C2';
 
-  if (typeof document !== 'undefined') {
+  useEffect(() => {
     document.documentElement.style.scrollBehavior = 'smooth';
-  }
+    return () => {
+      document.documentElement.style.scrollBehavior = '';
+    };
+  }, []);
   
   const handleGetStarted = () => {
     router.push('/upload');
@@ -121,45 +125,6 @@ export default function LandingPage() {
             background: 'linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.8) 50%, white 100%)'
           }}
         />
-
-        {/* Additional CSS for hero animations */}
-        <style jsx>{`
-          @keyframes heroFloat {
-            0%, 100% {
-              transform: translate(0, 0) scale(1);
-            }
-            33% {
-              transform: translate(30px, -30px) scale(1.1);
-            }
-            66% {
-              transform: translate(-20px, 20px) scale(0.9);
-            }
-          }
-
-          @keyframes spin {
-            from {
-              transform: rotate(45deg);
-            }
-            to {
-              transform: rotate(405deg);
-            }
-          }
-
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-
-          .animate-fadeIn {
-            animation: fadeIn 1s ease-out;
-          }
-        `}</style>
       </section>
 
       <section 
@@ -169,7 +134,7 @@ export default function LandingPage() {
           background: 'linear-gradient(to bottom, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)',
         }}
       >
-        {/* Decorative dots pattern */}
+
         <div 
           className="absolute inset-0 opacity-20"
           style={{
@@ -188,36 +153,23 @@ export default function LandingPage() {
 
         <div className="max-w-5xl w-full mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-x-12 relative z-10">
         
-          {/* Animated Squares Section */}
+
           <div className="relative w-full max-w-sm h-64 md:h-80 mb-10 md:mb-0 md:shrink-0 flex items-center justify-center">
-            {/* Green square with floating animation */}
             <div 
               style={{ 
-                backgroundColor: accentGreen,
-                transform: 'rotate(-15.13deg) translate(-60px, 32px)',
-                boxShadow: `0 10px 40px rgba(80, 227, 194, 0.4), 0 0 20px rgba(80, 227, 194, 0.2)`,
-                animation: 'float 6s ease-in-out infinite'
-              }}
-              className="absolute w-64 h-64 opacity-90"
-            />
-            
-            {/* Image with frame effect */}
-            <div 
-              style={{ 
-                transform: 'rotate(-5.42deg) translate(50px, -20px)',
+                transform: 'rotate(-15.13deg) translate(50px, -20px)',
                 boxShadow: `0 15px 50px rgba(74, 144, 226, 0.5), 0 0 30px rgba(74, 144, 226, 0.3)`,
                 animation: 'float 6s ease-in-out infinite 1s'
               }}
               className="absolute w-80 h-80 overflow-hidden"
             >
               <img 
-                src="/Lily.jpg" 
+                src="/duck.jpg" 
                 alt="FrameIt Preview" 
                 className="w-full h-full object-cover"
               />
             </div>
 
-            {/* Small decorative circles */}
             <div 
               className="absolute w-12 h-12 rounded-full opacity-60"
               style={{ 
@@ -238,7 +190,6 @@ export default function LandingPage() {
             />
           </div>
 
-          {/* Text Content Section */}
           <div className="text-center md:text-left md:max-w-md shrink-0"> 
             <h2 
               className="text-3xl sm:text-4xl font-extrabold text-gray-900 italic leading-tight mb-4" 
@@ -252,36 +203,12 @@ export default function LandingPage() {
               just one frame.
             </h2>
             
-            {/* Subtitle description */}
             <p className="text-gray-700 text-lg leading-relaxed">
               FrameIt transforms your everyday photos into stunning visual stories. 
               Choose a frame, customize it your way, and share your creativity with the world.
             </p>
           </div>
         </div>
-
-        {/* CSS Animations */}
-        <style jsx>{`
-          @keyframes float {
-            0%, 100% {
-              transform: translateY(0px) rotate(var(--rotation));
-            }
-            50% {
-              transform: translateY(-20px) rotate(var(--rotation));
-            }
-          }
-          
-          @keyframes pulse {
-            0%, 100% {
-              opacity: 0.6;
-              transform: scale(1);
-            }
-            50% {
-              opacity: 1;
-              transform: scale(1.1);
-            }
-          }
-        `}</style>
       </section>
 
       <section 
@@ -291,7 +218,7 @@ export default function LandingPage() {
           background: 'linear-gradient(to bottom, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)',
         }}
       >
-        {/* Decorative dots pattern */}
+
         <div 
           className="absolute inset-0 opacity-20"
           style={{
@@ -315,7 +242,6 @@ export default function LandingPage() {
               Why <span style={{ color: primaryBlue }}>FrameIt</span> is Your Picture <span style={{ color: accentGreen }}>Essential</span>.
             </h2>
             
-            {/* Decorative line under heading */}
             <div className="flex items-center justify-center gap-2 mt-6">
               <div 
                 className="h-1 w-16 rounded-full"
@@ -366,18 +292,6 @@ export default function LandingPage() {
 
           </div>
         </div>
-
-        {/* Additional CSS for animations */}
-        <style jsx>{`
-          @keyframes floatSlow {
-            0%, 100% {
-              transform: translateY(0px) translateX(0px);
-            }
-            50% {
-              transform: translateY(-30px) translateX(20px);
-            }
-          }
-        `}</style>
       </section>
 
       <LandingFooter />

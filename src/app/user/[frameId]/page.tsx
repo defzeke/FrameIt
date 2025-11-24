@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { Copy, Check } from 'lucide-react';
 import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
 import FramePreview from '@/app/components/FramePreview';
@@ -22,6 +23,7 @@ export default function SharedFramePage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [captionCopied, setCaptionCopied] = useState(false);
   
   const [userImage, setUserImage] = useState<string>('');
   const [userScale, setUserScale] = useState(100);
@@ -254,7 +256,22 @@ export default function SharedFramePage() {
                     </YellowButton>
                   </div>
 
-                  <div className="mb-4 bg-white rounded-lg p-1">
+                  <div className="mb-4 bg-white rounded-lg p-1 relative">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(userCaption);
+                        setCaptionCopied(true);
+                        setTimeout(() => setCaptionCopied(false), 2000);
+                      }}
+                      className="absolute top-2 right-2 bg-white text-gray-600 hover:text-gray-900 p-2 rounded hover:bg-gray-50 transition-all z-10"
+                      title="Copy caption"
+                    >
+                      {captionCopied ? (
+                        <Check size={16} className="text-green-600" />
+                      ) : (
+                        <Copy size={16} />
+                      )}
+                    </button>
                     <TextArea
                       value={userCaption}
                       onChange={setUserCaption}

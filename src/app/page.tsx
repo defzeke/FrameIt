@@ -44,9 +44,57 @@ export default function LandingPage() {
             backgroundPosition: 'top right, 20% 20%, 50% 50%, bottom center'
           }}
         />
+
+        {/* Floating decorative shapes */}
+        <div 
+          className="absolute w-96 h-96 rounded-full opacity-20 blur-3xl"
+          style={{ 
+            backgroundColor: accentGreen,
+            top: '5%',
+            left: '10%',
+            animation: 'heroFloat 12s ease-in-out infinite'
+          }}
+        />
+        <div 
+          className="absolute w-80 h-80 rounded-full opacity-15 blur-3xl"
+          style={{ 
+            backgroundColor: primaryBlue,
+            bottom: '20%',
+            right: '15%',
+            animation: 'heroFloat 15s ease-in-out infinite 3s'
+          }}
+        />
+
+        {/* Geometric shapes */}
+        <div 
+          className="absolute w-32 h-32 opacity-10"
+          style={{ 
+            backgroundColor: accentGreen,
+            top: '15%',
+            right: '20%',
+            transform: 'rotate(45deg)',
+            animation: 'spin 20s linear infinite'
+          }}
+        />
         
         <div className="relative z-10 text-center px-6 py-20">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-black mb-6 leading-tight">
+          {/* Decorative element above title */}
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <div 
+              className="h-0.5 w-12 rounded-full"
+              style={{ backgroundColor: accentGreen }}
+            />
+            <div 
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: accentGreen }}
+            />
+            <div 
+              className="h-0.5 w-12 rounded-full"
+              style={{ backgroundColor: accentGreen }}
+            />
+          </div>
+
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-black mb-6 leading-tight animate-fadeIn">
             Make it stand out.
             <br />
             <span style={{ color: primaryBlue }}>FrameIt</span> <span className="text-gray-900">now.</span>
@@ -54,9 +102,17 @@ export default function LandingPage() {
           <p className="text-xl sm:text-2xl text-black mb-8 font-medium">
             Create, customize, and be post-ready.
           </p>
-          <YellowButton size="lg" onClick={handleGetStarted}>
-            Get Started
-          </YellowButton>
+          
+          {/* Enhanced button with glow effect */}
+          <div className="relative inline-block">
+            <div 
+              className="absolute inset-0 rounded-full blur-xl opacity-50 pointer-events-none"
+              style={{ backgroundColor: '#FFD700' }}
+            />
+            <YellowButton size="lg" onClick={handleGetStarted}>
+              Get Started
+            </YellowButton>
+          </div>
         </div>
 
         <div 
@@ -65,84 +121,263 @@ export default function LandingPage() {
             background: 'linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.8) 50%, white 100%)'
           }}
         />
+
+        {/* Additional CSS for hero animations */}
+        <style jsx>{`
+          @keyframes heroFloat {
+            0%, 100% {
+              transform: translate(0, 0) scale(1);
+            }
+            33% {
+              transform: translate(30px, -30px) scale(1.1);
+            }
+            66% {
+              transform: translate(-20px, 20px) scale(0.9);
+            }
+          }
+
+          @keyframes spin {
+            from {
+              transform: rotate(45deg);
+            }
+            to {
+              transform: rotate(405deg);
+            }
+          }
+
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          .animate-fadeIn {
+            animation: fadeIn 1s ease-out;
+          }
+        `}</style>
       </section>
 
-      <section id="about-us" className="py-16 md:py-24 bg-white overflow-hidden scroll-mt-16">
-        <div className="max-w-5xl w-full mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-x-8">
+      <section 
+        id="about-us" 
+        className="py-16 md:py-24 overflow-hidden scroll-mt-16 relative"
+        style={{
+          background: 'linear-gradient(to bottom, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)',
+        }}
+      >
+        {/* Decorative dots pattern */}
+        <div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 20% 30%, ${primaryBlue} 2px, transparent 2px),
+              radial-gradient(circle at 80% 20%, ${accentGreen} 1.5px, transparent 1.5px),
+              radial-gradient(circle at 30% 70%, ${accentGreen} 1px, transparent 1px),
+              radial-gradient(circle at 75% 80%, ${primaryBlue} 2.5px, transparent 2.5px),
+              radial-gradient(circle at 10% 90%, ${primaryBlue} 1.5px, transparent 1.5px),
+              radial-gradient(circle at 90% 60%, ${accentGreen} 2px, transparent 2px)
+            `,
+            backgroundSize: '100px 100px, 150px 150px, 120px 120px, 180px 180px, 90px 90px, 110px 110px',
+            backgroundPosition: '0 0, 40px 40px, 80px 20px, 20px 60px, 60px 80px, 30px 30px'
+          }}
+        />
+
+        <div className="max-w-5xl w-full mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-x-12 relative z-10">
         
+          {/* Animated Squares Section */}
+          <div className="relative w-full max-w-sm h-64 md:h-80 mb-10 md:mb-0 md:shrink-0 flex items-center justify-center">
+            {/* Green square with floating animation */}
+            <div 
+              style={{ 
+                backgroundColor: accentGreen,
+                transform: 'rotate(-15.13deg) translate(-60px, 32px)',
+                boxShadow: `0 10px 40px rgba(80, 227, 194, 0.4), 0 0 20px rgba(80, 227, 194, 0.2)`,
+                animation: 'float 6s ease-in-out infinite'
+              }}
+              className="absolute w-64 h-64 opacity-90"
+            />
+            
+            {/* Image with frame effect */}
+            <div 
+              style={{ 
+                transform: 'rotate(-5.42deg) translate(50px, -20px)',
+                boxShadow: `0 15px 50px rgba(74, 144, 226, 0.5), 0 0 30px rgba(74, 144, 226, 0.3)`,
+                animation: 'float 6s ease-in-out infinite 1s'
+              }}
+              className="absolute w-80 h-80 overflow-hidden"
+            >
+              <img 
+                src="/Lily.jpg" 
+                alt="FrameIt Preview" 
+                className="w-full h-full object-cover"
+              />
+            </div>
 
-        <div className="relative w-full max-w-sm h-64 md:h-80 mb-10 md:mb-0 md:shrink-0 flex items-center">
+            {/* Small decorative circles */}
+            <div 
+              className="absolute w-12 h-12 rounded-full opacity-60"
+              style={{ 
+                backgroundColor: primaryBlue,
+                top: '-10px',
+                right: '20px',
+                animation: 'pulse 3s ease-in-out infinite'
+              }}
+            />
+            <div 
+              className="absolute w-8 h-8 rounded-full opacity-70"
+              style={{ 
+                backgroundColor: accentGreen,
+                bottom: '10px',
+                left: '10px',
+                animation: 'pulse 3s ease-in-out infinite 1.5s'
+              }}
+            />
+          </div>
 
-          <div 
-            style={{ 
-              backgroundColor: accentGreen,
-              transform: 'rotate(-15.13deg) translate(-60px, 32px)' 
-            }}
-            className="absolute w-64 h-64 shadow-xl opacity-90"
-          />
+          {/* Text Content Section */}
+          <div className="text-center md:text-left md:max-w-md shrink-0"> 
+            <h2 
+              className="text-3xl sm:text-4xl font-extrabold text-gray-900 italic leading-tight mb-4" 
+              style={{ textShadow: '4px 4px 8px rgba(0,0,0,0.4)' }} 
+            >
+              Turn 
+              <span style={{ color: primaryBlue }} className="font-extrabold"> moments</span> into 
+              <br />
+              <span style={{ color: accentGreen }} className="font-extrabold">masterpieces</span> with 
+              <br />
+              just one frame.
+            </h2>
+            
+            {/* Subtitle description */}
+            <p className="text-gray-700 text-lg leading-relaxed">
+              FrameIt transforms your everyday photos into stunning visual stories. 
+              Choose a frame, customize it your way, and share your creativity with the world.
+            </p>
+          </div>
+        </div>
+
+        {/* CSS Animations */}
+        <style jsx>{`
+          @keyframes float {
+            0%, 100% {
+              transform: translateY(0px) rotate(var(--rotation));
+            }
+            50% {
+              transform: translateY(-20px) rotate(var(--rotation));
+            }
+          }
           
-
-          <div 
-            style={{ 
-              backgroundColor: primaryBlue,
-              transform: 'rotate(-5.42deg) translate(50px, -20px)' 
-            }}
-            className="absolute w-64 h-64 shadow-2xl"
-          />
-        </div>
-
-
-        <div className="text-center md:text-left md:max-w-md shrink-0"> 
-          <h2 
-            className="text-3xl sm:text-4xl font-extrabold text-gray-900 italic leading-tight" 
-            style={{ textShadow: '4px 4px 8px rgba(0,0,0,0.4)' }} 
-          >
-            Turn 
-            <span style={{ color: primaryBlue }} className="font-extrabold"> moments</span> into 
-            <br />
-            <span style={{ color: accentGreen }} className="font-extrabold">masterpieces</span> with 
-            <br />
-            just one frame.
-          </h2>
-        </div>
-        </div>
+          @keyframes pulse {
+            0%, 100% {
+              opacity: 0.6;
+              transform: scale(1);
+            }
+            50% {
+              opacity: 1;
+              transform: scale(1.1);
+            }
+          }
+        `}</style>
       </section>
 
-      <section id="features" className="py-16 md:py-20 bg-white scroll-mt-16">
-        <div className="max-w-7xl mx-auto px-6">
+      <section 
+        id="features" 
+        className="py-16 md:py-20 scroll-mt-16 relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(to bottom, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)',
+        }}
+      >
+        {/* Decorative dots pattern */}
+        <div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 20% 30%, ${primaryBlue} 2px, transparent 2px),
+              radial-gradient(circle at 80% 20%, ${accentGreen} 1.5px, transparent 1.5px),
+              radial-gradient(circle at 30% 70%, ${accentGreen} 1px, transparent 1px),
+              radial-gradient(circle at 75% 80%, ${primaryBlue} 2.5px, transparent 2.5px),
+              radial-gradient(circle at 10% 90%, ${primaryBlue} 1.5px, transparent 1.5px),
+              radial-gradient(circle at 90% 60%, ${accentGreen} 2px, transparent 2px)
+            `,
+            backgroundSize: '100px 100px, 150px 150px, 120px 120px, 180px 180px, 90px 90px, 110px 110px',
+            backgroundPosition: '0 0, 40px 40px, 80px 20px, 20px 60px, 60px 80px, 30px 30px'
+          }}
+        />
 
-          <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-black">
-            Why <span style={{ color: primaryBlue }}>FrameIt</span> is Your Picture <span style={{ color: accentGreen }}>Essential</span>.
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-black">
+              Why <span style={{ color: primaryBlue }}>FrameIt</span> is Your Picture <span style={{ color: accentGreen }}>Essential</span>.
+            </h2>
             
-            <FeatureCard
-              title="Design Your Posts"
-              description="Pick from a collection of stylish, ready-made frames to enhance your photos. No need to fuss with designs, your photos get a polished look instantly"
-              icon={Wand2}
-              borderColor={primaryBlue}
-              iconColor={primaryBlue}
-            />
+            {/* Decorative line under heading */}
+            <div className="flex items-center justify-center gap-2 mt-6">
+              <div 
+                className="h-1 w-16 rounded-full"
+                style={{ backgroundColor: primaryBlue }}
+              />
+              <div 
+                className="h-1 w-8 rounded-full"
+                style={{ backgroundColor: accentGreen }}
+              />
+              <div 
+                className="h-1 w-16 rounded-full"
+                style={{ backgroundColor: primaryBlue }}
+              />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <div className="transform hover:scale-105 transition-transform duration-300">
+              <FeatureCard
+                title="Design Your Posts"
+                description="Pick from a collection of stylish, ready-made frames to enhance your photos. No need to fuss with designs, your photos get a polished look instantly"
+                icon={Wand2}
+                borderColor={primaryBlue}
+                iconColor={primaryBlue}
+              />
+            </div>
 
-            <FeatureCard
-              title="Effortless"
-              description="FrameIt makes it super easy to turn any photo into something unique. Just select a frame, write a caption, upload your picture, and you're done."
-              icon={Zap}
-              borderColor={accentGreen}
-              iconColor={accentGreen}
-            />
+            <div className="transform hover:scale-105 transition-transform duration-300 md:mt-8">
+              <FeatureCard
+                title="Effortless"
+                description="FrameIt makes it super easy to turn any photo into something unique. Just select a frame, write a caption, upload your picture, and you're done."
+                icon={Zap}
+                borderColor={accentGreen}
+                iconColor={accentGreen}
+              />
+            </div>
 
-            <FeatureCard
-              title="Share Your Work"
-              description="Show your framed photos with friends, family or online. The ready-made frames makes sharing your memories quick, fun, and eye-catching."
-              icon={Share2}
-              borderColor={primaryBlue}
-              iconColor={accentGreen}
-            />
+            <div className="transform hover:scale-105 transition-transform duration-300">
+              <FeatureCard
+                title="Share Your Work"
+                description="Show your framed photos with friends, family or online. The ready-made frames makes sharing your memories quick, fun, and eye-catching."
+                icon={Share2}
+                borderColor={primaryBlue}
+                iconColor={accentGreen}
+              />
+            </div>
 
           </div>
         </div>
+
+        {/* Additional CSS for animations */}
+        <style jsx>{`
+          @keyframes floatSlow {
+            0%, 100% {
+              transform: translateY(0px) translateX(0px);
+            }
+            50% {
+              transform: translateY(-30px) translateX(20px);
+            }
+          }
+        `}</style>
       </section>
 
       <LandingFooter />

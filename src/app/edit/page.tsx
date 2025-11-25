@@ -172,9 +172,7 @@ export default function EditImagePage() {
             
             <div className="flex flex-col items-center gap-6">
               <FramePreview
-                imageUrl={imageUrl || undefined}
-                scale={scale}
-                rotate={rotate}
+                frameUrl={imageUrl || undefined}
                 frameColor={primaryBlue}
               />
               

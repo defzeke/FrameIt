@@ -134,7 +134,7 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
     const ovalGradient = 'linear-gradient(90deg, #f0fdf4 0%, #ffffff 100%)';
     
     const dropZoneClasses = `
-        w-full max-w-2xl mx-auto p-16 md:p-24 
+        w-full max-w-xl mx-auto p-10 md:p-12 
         border-4 rounded-[4rem] 
         flex flex-col items-center justify-center text-center 
         transition-all duration-300 ease-in-out
@@ -148,7 +148,7 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
     `;
 
     return (
-        <div className="w-full p-8 md:p-16">
+        <div className="w-full px-4 py-6">
             {statusMessage && (
                 <div className="fixed top-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-xl z-50 transition-opacity duration-300">
                     {statusMessage}
@@ -166,12 +166,12 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
             >
-                <CloudUploadIcon className={`w-32 h-32 mb-6 ${isValidating ? 'text-blue-500 animate-pulse' : isDragging || fileName ? 'text-teal-500' : 'text-teal-400'}`} />
+                <CloudUploadIcon className={`w-20 h-20 mb-4 ${isValidating ? 'text-blue-500 animate-pulse' : isDragging || fileName ? 'text-teal-500' : 'text-teal-400'}`} />
                 
-                <p className="text-3xl font-bold text-gray-700 mb-2">
+                <p className="text-2xl font-bold text-gray-700 mb-2">
                     {isValidating ? 'Validating image...' : fileName ? `File Selected: ${fileName}` : 'Drag or Drop your Frame here'}
                 </p>
-                <p className={`text-sm ${isValidating ? 'text-blue-600' : isDragging || fileName ? 'text-teal-600' : 'text-gray-500'}`}>
+                <p className={`text-xs ${isValidating ? 'text-blue-600' : isDragging || fileName ? 'text-teal-600' : 'text-gray-500'}`}>
                     {isValidating ? 'Please wait...' : 'JPG or PNG only. Max 10MB. Min 100x100px.'}
                 </p>
             </label>
@@ -184,9 +184,9 @@ export const UploadCardModel: React.FC<UploadCardModelProps> = ({ onFileDrop, up
                 className="hidden" 
             />
 
-            <div className="text-center mt-8">
+            <div className="text-center mt-4">
                 <YellowButton 
-                    size="lg" 
+                    size="md" 
                     fullRounded={true}
                     onClick={() => !isValidating && document.getElementById('file-upload')?.click()}
                     className={isValidating ? 'opacity-50 cursor-not-allowed' : ''}

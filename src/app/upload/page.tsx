@@ -66,11 +66,11 @@ export default function App() {
 
             <Header />
             
-            <main className="grow flex flex-col items-center justify-center p-4 relative z-10">
+            <main className="grow flex flex-col items-center justify-center px-4 py-2 relative z-10">
                 
                 {imageFile && (
-                    <div className="mb-8 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded-lg max-w-xl w-full text-center font-medium shadow-md">
-                        Successfully selected: **{imageFile.name}** ({Math.round(imageFile.size / 1024)} KB). Redirecting to editor...
+                    <div className="mb-4 p-3 bg-green-100 border-l-4 border-green-500 text-green-700 rounded-lg max-w-xl w-full text-center text-sm font-medium shadow-md">
+                        Successfully selected: {imageFile.name} ({Math.round(imageFile.size / 1024)} KB). Redirecting...
                     </div>
                 )}
 

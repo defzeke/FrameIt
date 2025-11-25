@@ -63,6 +63,9 @@ export default function SharedFramePage() {
       canvas.width = size;
       canvas.height = size;
 
+      ctx.fillStyle = frame.frameColor || '#4A90E2';
+      ctx.fillRect(0, 0, size, size);
+
       if (userImage) {
         const userImg = new Image();
         userImg.crossOrigin = 'anonymous';
@@ -78,9 +81,6 @@ export default function SharedFramePage() {
         ctx.scale(userScale / 100, userScale / 100);
         ctx.drawImage(userImg, -size / 2, -size / 2, size, size);
         ctx.restore();
-      } else {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, size, size);
       }
 
       const frameImg = new Image();
@@ -121,7 +121,10 @@ export default function SharedFramePage() {
     const file = e.target.files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
+      console.log('User uploaded photo:', file.name, 'URL:', url);
+      console.log('File type:', file.type, 'Size:', file.size);
       setUserImage(url);
+      console.log('userImage state should now be:', url);
     }
   };
 
@@ -238,8 +241,8 @@ export default function SharedFramePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             
             <div className="flex flex-col items-center gap-6">
-              <div id="frame-preview" className="relative w-[360px] h-[360px] md:w-[420px] md:h-[420px] shadow-2xl">
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-100 overflow-hidden">
+              <div id="frame-preview" className="relative w-[360px] h-[360px] md:w-[420px] md:h-[420px] shadow-2xl overflow-hidden" style={{ backgroundColor: frame.frameColor }}>
+                <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 0 }}>
                   {userImage ? (
                     <img 
                       src={userImage}
@@ -247,23 +250,44 @@ export default function SharedFramePage() {
                       className="w-full h-full object-cover"
                       style={{
                         transform: `scale(${userScale / 100}) rotate(${userRotate}deg)`,
-                        transition: 'transform 0.2s ease'
+                        transition: 'transform 0.2s ease',
+                        display: 'block',
+                        opacity: 1
                       }}
+                      onLoad={(e) => {
+                        console.log('User photo rendered:', userImage);
+                        console.log('Image dimensions:', e.currentTarget.naturalWidth, 'x', e.currentTarget.naturalHeight);
+                        console.log('Image display:', window.getComputedStyle(e.currentTarget).display);
+                        console.log('Image opacity:', window.getComputedStyle(e.currentTarget).opacity);
+                      }}
+                      onError={(e) => console.error('User photo failed to render:', userImage)}
                     />
                   ) : (
-                    <div className="flex items-center justify-center w-full h-full bg-white">
+                    <div className="flex items-center justify-center w-full h-full bg-gray-100">
                       <span className="text-4xl font-bold text-gray-400">Upload Photo</span>
                     </div>
                   )}
                 </div>
                 
-                <div className="absolute inset-0 pointer-events-none z-10">
+                <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 10 }}>
                   <img 
                     src={frame.imageUrl}
                     alt="Frame overlay"
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                     style={{
-                      pointerEvents: 'none'
+                      pointerEvents: 'none',
+                      mixBlendMode: 'normal',
+                      display: 'block'
+                    }}
+                    onError={(e) => {
+                      console.error('Frame image failed to load:', frame.imageUrl);
+                      e.currentTarget.style.display = 'none';
+                    }}
+                    onLoad={(e) => {
+                      console.log('Frame image loaded successfully');
+                      console.log('Frame image natural size:', e.currentTarget.naturalWidth, 'x', e.currentTarget.naturalHeight);
+                      console.log('Is PNG?', frame.imageUrl.includes('image/png'));
+                      console.log('Frame z-index:', window.getComputedStyle(e.currentTarget.parentElement!).zIndex);
                     }}
                   />
                 </div>

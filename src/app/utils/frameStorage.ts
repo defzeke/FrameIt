@@ -34,9 +34,13 @@ const compressImage = async (base64Image: string, maxWidth = 800, quality = 0.7)
         return;
       }
 
+      ctx.clearRect(0, 0, width, height);
       ctx.drawImage(img, 0, 0, width, height);
       
-      const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+      const isPNG = base64Image.startsWith('data:image/png');
+      const compressedBase64 = isPNG 
+        ? canvas.toDataURL('image/png')
+        : canvas.toDataURL('image/jpeg', quality);
       resolve(compressedBase64);
     };
     img.onerror = () => reject(new Error('Failed to load image'));

@@ -1,44 +1,39 @@
 "use client";
 
 interface FramePreviewProps {
-  imageUrl?: string;
-  scale?: number;
-  rotate?: number;
+  frameUrl?: string;
   frameColor?: string;
 }
 
 export default function FramePreview({
-  imageUrl,
-  scale = 100,
-  rotate = 0,
+  frameUrl,
   frameColor = '#4A90E2'
 }: FramePreviewProps) {
   return (
     <div className="flex flex-col items-center">
-      {/* Frame Container with ID for downloading */}
       <div 
         id="frame-preview"
-        className="relative w-[360px] h-[360px] md:w-[420px] md:h-[420px] shadow-2xl"
+        className="relative w-[360px] h-[360px] md:w-[420px] md:h-[420px] shadow-2xl overflow-hidden"
         style={{
-          backgroundColor: frameColor,
-          padding: '24px'
+          backgroundColor: frameColor
         }}
       >
-        <div className="w-full h-full bg-white flex items-center justify-center overflow-hidden">
-          {imageUrl ? (
-            <img 
-              src={imageUrl}
-              alt="Preview"
-              className="object-cover"
-              style={{
-                transform: `scale(${scale / 100}) rotate(${rotate}deg)`,
-                transition: 'transform 0.2s ease'
-              }}
-            />
-          ) : (
-            <span className="text-6xl font-bold text-gray-800">FRAME</span>
-          )}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center text-white text-opacity-30">
+            <div className="text-6xl mb-2">📷</div>
+            <p className="text-sm">User photo will appear here</p>
+          </div>
         </div>
+        
+        {frameUrl && (
+          <div className="absolute inset-0 pointer-events-none z-10">
+            <img 
+              src={frameUrl}
+              alt="Frame overlay"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

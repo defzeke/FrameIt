@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { FrameProvider } from "@/app/contexts/FrameContext";
+import { FrameProvider } from "@/contexts/FrameContext";
 
 
 const inter = Inter({

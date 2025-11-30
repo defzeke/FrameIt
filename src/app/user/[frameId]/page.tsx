@@ -3,15 +3,15 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Copy, Check } from 'lucide-react';
-import Header from '@/app/components/Header';
-import Footer from '@/app/components/Footer';
-import FramePreview from '@/app/components/FramePreview';
-import Slider from '@/app/components/Slider';
-import TextArea from '@/app/components/TextArea';
-import YellowButton from '@/app/components/YellowButton';
-import CarouselSection from '@/app/components/CarouselSection';
-import { getFrame, SavedFrame } from '@/app/utils/frameStorage';
-import { downloadFrame } from '@/app/utils/downloadFrame';
+import Header from '@/components/sections/Navbar';
+import Footer from '@/components/sections/Footer';
+import FramePreview from '@/components/ui/FramePreview';
+import Slider from '@/components/ui/Slider';
+import TextArea from '@/components/ui/TextArea';
+import YellowButton from '@/components/ui/YellowButton';
+import CarouselSection from '@/components/sections/CarouselSection';
+import { getFrame, SavedFrame } from '@/lib/frameStorage';
+import { downloadFrame } from '@/lib/downloadFrame';
 
 export default function SharedFramePage() {
   const params = useParams();

@@ -1,10 +1,9 @@
 "use client";
 
-import Header from '@/app/components/Header'
-import Footer from '@/app/components/Footer';
-import { UploadCardModel } from '@/app/components/UploadCardModel';
-import React, { useCallback } from 'react';
-import { useFrame } from '@/app/contexts/FrameContext';
+import Footer from '@/components/sections/Footer';
+import { UploadCardModel } from '@/components/ui/UploadCardModel';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useFrame } from '@/contexts/FrameContext';
 import { useRouter } from 'next/navigation';
 
 
@@ -14,19 +13,20 @@ export default function App() {
     const primaryBlue = '#4A90E2';
     const accentGreen = '#50E3C2';
 
+    const [showSuccess, setShowSuccess] = useState(false);
+
     const handleFileDrop = useCallback((file: File) => {
         console.log("File received:", file.name);
         setImageFile(file);
-        
+        setShowSuccess(true);
         setTimeout(() => {
+            setShowSuccess(false);
             router.push('/edit');
-        }, 500);
+        }, 2000);
     }, [setImageFile, router]);
 
     return (
-        <div className="min-h-screen flex flex-col font-sans relative overflow-hidden" style={{
-            background: 'linear-gradient(to bottom, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)',
-        }}>
+        <div className="min-h-screen flex flex-col font-sans relative overflow-hidden bg-gradient-to-b from-[#4A90E2] via-[#8CB8E8] to-white">
             {/* Decorative dots pattern */}
             <div 
                 className="absolute inset-0 opacity-10 pointer-events-none"
@@ -64,12 +64,9 @@ export default function App() {
                 }}
             />
 
-            <Header />
-            
             <main className="grow flex flex-col items-center justify-center px-4 py-2 relative z-10">
-                
-                {imageFile && (
-                    <div className="mb-4 p-3 bg-green-100 border-l-4 border-green-500 text-green-700 rounded-lg max-w-xl w-full text-center text-sm font-medium shadow-md">
+                {imageFile && showSuccess && (
+                    <div className="mb-4 p-3 bg-green-100 border-l-4 border-green-500 text-green-700 rounded-lg max-w-xl w-full text-center text-sm font-medium shadow-md transition-opacity duration-500">
                         Successfully selected: {imageFile.name} ({Math.round(imageFile.size / 1024)} KB). Redirecting...
                     </div>
                 )}

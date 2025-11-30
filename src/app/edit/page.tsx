@@ -166,16 +166,10 @@ export default function EditImagePage() {
             <div className="flex items-center justify-center lg:justify-center">
               <div className="w-full max-w-md">
                 <ControlPanel
-                  scale={scale}
-                  rotate={rotate}
                   caption={caption}
-                  onScaleChange={setScale}
-                  onRotateChange={setRotate}
                   onCaptionChange={setCaption}
-                  onSave={handleSave}
                   onShare={handleShare}
                   backgroundColor={primaryBlue}
-                  isDownloading={isDownloading}
                 />
               </div>
             </div>

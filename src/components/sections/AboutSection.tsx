@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 const AboutSection = ({ primaryBlue = '#4A90E2', accentGreen = '#50E3C2' }) => (
@@ -33,10 +34,13 @@ const AboutSection = ({ primaryBlue = '#4A90E2', accentGreen = '#50E3C2' }) => (
           }}
           className="absolute w-80 h-80 overflow-hidden"
         >
-          <img 
-            src="/duck.png" 
-            alt="FrameIt Preview" 
-            className="w-full h-full object-cover"
+          <Image
+            src="/duck.png"
+            alt="FrameIt Preview"
+            fill
+            className="object-cover"
+            sizes="320px"
+            priority
           />
         </div>
         <div 

@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
 import { jwtDecode } from 'jwt-decode';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const cookieStore = await cookies();
   const token = cookieStore.get('frameit_token')?.value;
   if (!token) {
@@ -15,7 +14,7 @@ export async function GET(request: NextRequest) {
   try {
     const decoded = jwtDecode(token);
     userId = decoded.sub;
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Invalid token', display_name: null }, { status: 401 });
   }
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Camera } from 'lucide-react';
 import Footer from '@/components/sections/Footer';
 import Slider from '@/components/ui/Slider';
 import TextArea from '@/components/ui/TextArea';
@@ -83,11 +83,8 @@ export default function SharedFrameSection() {
             <div className="text-6xl mb-4">🖼️</div>
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Frame Not Found</h1>
             <p className="text-gray-600 mb-8">
-              This frame doesn't exist or has been removed. Create your own frame to get started!
+              This frame doesn't exist or has been removed.
             </p>
-            <YellowButton size="lg" onClick={handleCreateYourOwn}>
-              Create Your Own Frame
-            </YellowButton>
           </div>
         </main>
         <Footer />
@@ -96,9 +93,7 @@ export default function SharedFrameSection() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center overflow-x-hidden relative" style={{
-      background: 'linear-gradient(to bottom, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)',
-    }}>
+    <div className="min-h-screen flex flex-col items-center justify-center overflow-x-hidden relative bg-gradient-to-b from-[#4A90E2] via-[#8CB8E8] to-white">
       {/* Decorative dots pattern */}
       <div 
         className="absolute inset-0 opacity-10 pointer-events-none"
@@ -166,12 +161,12 @@ export default function SharedFrameSection() {
                       }}
                       onMouseDown={handleImgMouseDown}
                       onLoad={(e) => {
-                        // ...existing code...
                       }}
                       onError={(e) => {}}
                     />
                   ) : (
-                    <div className="flex items-center justify-center w-full h-full bg-gray-100">
+                    <div className="flex flex-col items-center justify-center w-full h-full bg-gray-100">
+                      <span className="text-4xl mb-2">📷</span>
                       <span className="text-xl font-bold text-gray-400">Upload your Photo</span>
                     </div>
                   )}
@@ -208,44 +203,52 @@ export default function SharedFrameSection() {
             {/* Right: Customization Controls */}
             <div className="flex items-center justify-center lg:justify-start">
               <div className="w-full max-w-md">
-                <div 
-                  className="rounded-3xl shadow-2xl p-8 flex flex-col"
-                  style={{ backgroundColor: frame.frameColor }}
+                <div
+                  className="rounded-3xl shadow-2xl p-8 flex flex-col border border-gray-200"
+                  style={{
+                    background: `linear-gradient(135deg, rgba(255,255,255,0.85) 60%, ${frame.frameColor} 100%)`,
+                    backdropFilter: 'blur(16px)',
+                    WebkitBackdropFilter: 'blur(16px)',
+                    boxShadow: '0 8px 32px 0 rgba(74,144,226,0.12)',
+                    border: '1px solid rgba(255,255,255,0.25)',
+                  }}
                 >
-                  <h2 className="text-2xl font-bold text-black mb-6">Customize Frame</h2>
+                  <h2 className="text-3xl font-extrabold text-gray-900 mb-6 tracking-tight drop-shadow-sm">Customize Frame</h2>
 
-                  <Slider
-                    label="Scale"
-                    value={userScale}
-                    onChange={setUserScale}
-                    min={50}
-                    max={150}
-                    step={1}
-                  />
+                  <div className="space-y-6">
+                    <Slider
+                      label="Scale"
+                      value={userScale}
+                      onChange={setUserScale}
+                      min={50}
+                      max={150}
+                      step={1}
+                    />
 
-                  <Slider
-                    label="Rotate"
-                    value={userRotate}
-                    onChange={setUserRotate}
-                    min={0}
-                    max={360}
-                    step={1}
-                  />
+                    <Slider
+                      label="Rotate"
+                      value={userRotate}
+                      onChange={setUserRotate}
+                      min={0}
+                      max={360}
+                      step={1}
+                    />
+                  </div>
 
-                  <div className="mb-4">
-                    <YellowButton 
-                      size="md" 
-                      className={`w-full ${isDownloading ? 'opacity-50 cursor-wait' : ''}`}
+                  <div className="my-6">
+                    <YellowButton
+                      size="md"
+                      className={`w-full transition-all duration-200 ${isDownloading ? 'opacity-50 cursor-wait' : 'hover:scale-[1.03] hover:shadow-lg'}`}
                       onClick={handleDownload}
                     >
                       {isDownloading ? 'Downloading...' : 'Download Frame'}
                     </YellowButton>
                   </div>
 
-                  <div className="mb-4 bg-white rounded-lg p-1 relative">
+                  <div className="mb-4 bg-white/80 rounded-xl p-2 relative border border-gray-100 shadow-sm">
                     <button
                       onClick={() => copy(userCaption)}
-                      className="absolute top-2 right-2 bg-white text-gray-600 hover:text-gray-900 p-2 rounded hover:bg-gray-50 transition-all z-10"
+                      className="absolute top-2 right-2 bg-white text-gray-600 hover:text-gray-900 p-2 rounded-full hover:bg-gray-50 transition-all z-10 shadow"
                       title="Copy caption"
                     >
                       {captionCopied ? (
@@ -262,9 +265,9 @@ export default function SharedFrameSection() {
                     />
                   </div>
 
-                  <div className="mt-4 p-4 bg-white bg-opacity-20 rounded-lg">
-                    <p className="text-black text-sm text-center font-medium">
-                      Template by: Original Creator
+                  <div className="mt-4 p-4 bg-white/40 rounded-lg border border-gray-100">
+                    <p className="text-gray-700 text-sm text-center font-medium">
+                      Template by: <span className="font-semibold text-blue-600">Original Creator</span>
                     </p>
                   </div>
                 </div>

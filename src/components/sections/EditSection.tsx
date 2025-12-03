@@ -9,7 +9,6 @@ import { useUserDisplayName } from '@/hooks/useUserDisplayName';
 import YellowButton from '@/components/ui/YellowButton';
 import ShareModal from '@/components/modals/ShareModal';
 import { useShareFrame } from '@/hooks/useShareFrame';
-import { useDownloadFrame } from '@/hooks/useDownloadFrame';
 import { useRedirectIfNoImage } from '@/hooks/useRedirectIfNoImage';
 
 export default function EditSection() {
@@ -37,7 +36,6 @@ export default function EditSection() {
     frameId,
     setFrameId,
   });
-  const { handleSave, isDownloading } = useDownloadFrame();
 
   const primaryBlue = frameColor || '#4A90E2';
   const accentGreen = '#50E3C2';

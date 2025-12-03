@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { Copy, Check, Camera } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { useParams } from 'next/navigation';
+import { Copy, Check } from 'lucide-react';
 import Footer from '@/components/sections/Footer';
 import Slider from '@/components/ui/Slider';
 import TextArea from '@/components/ui/TextArea';
@@ -11,11 +11,10 @@ import { downloadFrameImage } from '@/lib/downloadFrameImage';
 import { useDraggableImage } from '@/hooks/useDraggableImage';
 import { useLoadFrame } from '@/hooks/useLoadFrame';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
-import { useFileInput } from '@/hooks/useFileInput';
+import FramePreview from '@/components/ui/FramePreview';
 
 export default function SharedFrameSection() {
   const params = useParams();
-  const router = useRouter();
   const frameId = params.frameId as string;
   const [userImage, setUserImage] = useState<string>('');
   const [userScale, setUserScale] = useState(100);
@@ -23,8 +22,21 @@ export default function SharedFrameSection() {
   const [isDownloading, setIsDownloading] = useState(false);
   const { frame, loading, notFound, userCaption, setUserCaption } = useLoadFrame(frameId);
   const { copied: captionCopied, copy } = useCopyToClipboard();
-  const { fileInputRef, handleAddPhoto, handleFileChange } = useFileInput(setUserImage);
-  const { userImgPos, setUserImgPos, handleImgMouseDown, dragging } = useDraggableImage();
+  // File input handling (replaces useFileInput)
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleAddPhoto = () => {
+    fileInputRef.current?.click();
+  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setUserImage(event.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+  const { userImgPos } = useDraggableImage();
 
   const handleDownload = async () => {
     if (!frame) return;
@@ -40,9 +52,7 @@ export default function SharedFrameSection() {
     });
   };
 
-  const handleCreateYourOwn = () => {
-    router.push('/upload');
-  };
+
 
   if (loading) {
     return (
@@ -83,7 +93,7 @@ export default function SharedFrameSection() {
             <div className="text-6xl mb-4">🖼️</div>
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Frame Not Found</h1>
             <p className="text-gray-600 mb-8">
-              This frame doesn't exist or has been removed.
+              This frame doesn&apos;t exist or has been removed.
             </p>
           </div>
         </main>
@@ -146,53 +156,11 @@ export default function SharedFrameSection() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             
             <div className="flex flex-col items-center gap-6">
-              <div id="frame-preview" className="relative w-[480px] h-[480px] md:w-[600px] md:h-[600px] shadow-2xl overflow-hidden" style={{ backgroundColor: frame.frameColor }}>
-                <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 0 }}>
-                  {userImage ? (
-                    <img 
-                      src={userImage}
-                      alt="Your photo"
-                      className="w-full h-full object-cover cursor-grab"
-                      style={{
-                        transform: `translate(${userImgPos.x}px, ${userImgPos.y}px) scale(${userScale / 100}) rotate(${userRotate}deg)`,
-                        transition: dragging ? 'none' : 'transform 0.2s ease',
-                        display: 'block',
-                        opacity: 1
-                      }}
-                      onMouseDown={handleImgMouseDown}
-                      onLoad={(e) => {
-                      }}
-                      onError={(e) => {}}
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center justify-center w-full h-full bg-gray-100">
-                      <span className="text-4xl mb-2">📷</span>
-                      <span className="text-xl font-bold text-gray-400">Upload your Photo</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 10 }}>
-                  <img 
-                    src={frame.imageUrl}
-                    alt="Frame overlay"
-                    className="w-full h-full object-cover"
-                    style={{
-                      pointerEvents: 'none',
-                      mixBlendMode: 'normal',
-                      display: 'block'
-                    }}
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                    onLoad={(e) => {
-                      // ...existing code...
-                    }}
-                  />
-                </div>
-              </div>
-              
-              <YellowButton 
+              <FramePreview
+                frameUrl={frame.imageUrl}
+                frameColor={frame.frameColor}
+              />
+              <YellowButton
                 size="lg"
                 onClick={handleAddPhoto}
               >

@@ -4,15 +4,106 @@ import Footer from '@/components/sections/Footer';
 import { UploadCardModel } from '@/components/ui/UploadCardModel';
 import { useFrame } from '@/contexts/FrameContext';
 import { useUploadHandler } from '@/hooks/useUploadHandler';
+import { useEffect, useState } from 'react';
+import { useUserDisplayName } from '@/hooks/useUserDisplayName';
+import { getAllFrames, deleteFrame, SavedFrame } from '@/lib/frameStorage';
+import FrameCard from '@/components/ui/FrameCard';
+import YellowButton from '@/components/ui/YellowButton';
 
 export default function UploadSection() {
     const { imageFile, setImageFile } = useFrame();
     const { showSuccess, handleFileDrop } = useUploadHandler(setImageFile);
     const primaryBlue = '#4A90E2';
     const accentGreen = '#50E3C2';
+    const displayName = useUserDisplayName();
+    const [savedFrames, setSavedFrames] = useState<Record<string, SavedFrame>>({});
+    const [deleting, setDeleting] = useState<string | null>(null);
+
+    // Logout handler: call sign-out API and redirect
+    const handleLogout = async () => {
+        try {
+            const res = await fetch('/api/auth/sign-out', { method: 'GET' });
+            if (res.redirected) {
+                window.location.href = res.url;
+            } else {
+                window.location.href = '/';
+            }
+        } catch (err) {
+            window.location.href = '/';
+        }
+    };
+
+    useEffect(() => {
+        setSavedFrames(getAllFrames());
+    }, []);
+
+    const handleDelete = (frameId: string) => {
+        setDeleting(frameId);
+        setTimeout(() => {
+            deleteFrame(frameId);
+            setSavedFrames(getAllFrames());
+            setDeleting(null);
+        }, 500);
+    };
 
     return (
         <div className="min-h-screen flex flex-col font-sans relative overflow-hidden bg-gradient-to-b from-[#4A90E2] via-[#8CB8E8] to-white">
+            {/* Top left greeting - beautified */}
+            <div className="absolute top-6 left-8 z-30 flex items-center gap-3">
+                <div
+                    className="flex items-center gap-2 px-5 py-3 rounded-2xl shadow-lg backdrop-blur-md border border-white/30 bg-white/60"
+                    style={{
+                        boxShadow: '0 4px 24px 0 rgba(74,144,226,0.10)',
+                        border: '1.5px solid rgba(255,255,255,0.25)',
+                        minWidth: '180px',
+                        maxWidth: '320px',
+                    }}
+                >
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="text-blue-400" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="12" fill="#4A90E2" fillOpacity="0.15"/>
+                        <path d="M12 12c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V20h14v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="#4A90E2"/>
+                    </svg>
+                    <div className="flex flex-col">
+                        <span className="text-base font-semibold text-gray-800 tracking-tight">Hello{displayName ? `,` : ''}</span>
+                        {displayName ? (
+                            <div className="flex flex-col items-start w-full" style={{maxWidth: '180px'}}>
+                                {(() => {
+                                    const words = displayName.split(' ');
+                                    let lines = [];
+                                    let currentLine = '';
+                                    for (let word of words) {
+                                        if ((currentLine + ' ' + word).trim().length > 18 && currentLine.length > 0) {
+                                            lines.push(currentLine.trim());
+                                            currentLine = word;
+                                        } else {
+                                            currentLine += (currentLine ? ' ' : '') + word;
+                                        }
+                                    }
+                                    if (currentLine) lines.push(currentLine.trim());
+                                    return lines.map((line, idx) => (
+                                        <span key={idx} className="text-sm font-medium text-blue-600 w-full break-words">
+                                            {line}
+                                        </span>
+                                    ));
+                                })()}
+                            </div>
+                        ) : (
+                            <span className="text-sm font-medium text-blue-600 truncate" style={{maxWidth: '180px'}}>
+                                Guest
+                            </span>
+                        )}
+                    </div>
+                    {/* Logout text button */}
+                    <button
+                        onClick={handleLogout}
+                        className="ml-4 text-xs font-medium text-red-500 hover:underline hover:text-red-600 transition-colors px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-red-300"
+                        style={{ background: 'none', border: 'none' }}
+                        type="button"
+                    >
+                        Logout
+                    </button>
+                </div>
+            </div>
             {/* Decorative dots pattern */}
             <div 
                 className="absolute inset-0 opacity-10 pointer-events-none"
@@ -61,6 +152,37 @@ export default function UploadSection() {
                     onFileDrop={handleFileDrop}
                     uploadedFile={imageFile}
                 />
+
+                {/* Saved Frames Section */}
+                <div className="w-full max-w-4xl mx-auto mt-10">
+                    <h2 className="text-xl font-bold text-gray-800 mb-4">Your Saved Frames</h2>
+                    {Object.keys(savedFrames).length === 0 ? (
+                        <div className="text-gray-500 text-center py-8">No saved frames found.</div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                            {Object.values(savedFrames).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map(frame => (
+                                <div key={frame.frameId} className="relative bg-white rounded-2xl shadow-lg p-4 flex flex-col items-center">
+                                    <FrameCard 
+                                        title={frame.caption || 'Untitled'}
+                                        caption={frame.frameId}
+                                        frameColor={frame.frameColor}
+                                        imageUrl={frame.imageUrl}
+                                    />
+                                    <div className="mt-2 flex gap-2">
+                                        <YellowButton 
+                                            size="sm" 
+                                            className={`!rounded-lg px-3 py-1.5 ${deleting === frame.frameId ? 'opacity-50 cursor-wait' : ''}`}
+                                            onClick={() => handleDelete(frame.frameId)}
+                                            disabled={deleting === frame.frameId}
+                                        >
+                                            {deleting === frame.frameId ? 'Deleting...' : 'Delete'}
+                                        </YellowButton>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </main>
 
             <Footer />

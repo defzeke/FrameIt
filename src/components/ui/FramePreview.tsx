@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image';
 
 interface FramePreviewProps {
 	frameUrl?: string;
@@ -26,10 +27,13 @@ export default function FramePreview({
 				</div>
 				{frameUrl && (
 					<div className="absolute inset-0 pointer-events-none z-10">
-						<img 
+						<Image
 							src={frameUrl}
 							alt="Frame overlay"
-							className="w-full h-full object-cover"
+							fill
+							className="object-cover"
+							priority
+							sizes="(max-width: 680px) 100vw, 680px"
 						/>
 					</div>
 				)}

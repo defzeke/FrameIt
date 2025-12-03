@@ -9,18 +9,25 @@ export function useLoadFrame(frameId: string) {
 
   useEffect(() => {
     if (!frameId) {
-      setNotFound(true);
-      setLoading(false);
+      setTimeout(() => {
+        setNotFound(true);
+        setLoading(false);
+      }, 0);
       return;
     }
     const savedFrame = getFrame(frameId);
     if (savedFrame) {
-      setFrame(savedFrame);
-      setUserCaption(savedFrame.caption);
+      setTimeout(() => {
+        setFrame(savedFrame);
+        setUserCaption(savedFrame.caption);
+        setLoading(false);
+      }, 0);
     } else {
-      setNotFound(true);
+      setTimeout(() => {
+        setNotFound(true);
+        setLoading(false);
+      }, 0);
     }
-    setLoading(false);
   }, [frameId]);
 
   return { frame, loading, notFound, userCaption, setUserCaption };

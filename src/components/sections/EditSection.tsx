@@ -4,6 +4,8 @@ import { useFrame } from '@/contexts/FrameContext';
 import Footer from '@/components/sections/Footer';
 import FramePreview from '@/components/ui/FramePreview';
 import ControlPanel from '@/components/ui/ControlPanel';
+import React, { useState } from 'react';
+import { useUserDisplayName } from '@/hooks/useUserDisplayName';
 import YellowButton from '@/components/ui/YellowButton';
 import ShareModal from '@/components/modals/ShareModal';
 import { useShareFrame } from '@/hooks/useShareFrame';
@@ -11,6 +13,9 @@ import { useDownloadFrame } from '@/hooks/useDownloadFrame';
 import { useRedirectIfNoImage } from '@/hooks/useRedirectIfNoImage';
 
 export default function EditSection() {
+  const [domain, setDomain] = useState('');
+  const [template, setTemplate] = useState('');
+  const templateBy = useUserDisplayName();
   const {
     imageUrl,
     scale,
@@ -18,8 +23,6 @@ export default function EditSection() {
     caption,
     frameColor,
     frameId,
-    setScale,
-    setRotate,
     setCaption,
     setFrameId,
   } = useFrame();
@@ -97,7 +100,50 @@ export default function EditSection() {
               </YellowButton>
             </div>
             <div className="flex items-center justify-center lg:justify-center">
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-md flex flex-col gap-4 mb-20">
+                {/* Domain name input */}
+                <div>
+                  <label htmlFor="domain" className="block text-sm font-medium text-gray-700 mb-1">Custom Domain</label>
+                  <div className="flex items-center">
+                    <input
+                      id="domain"
+                      name="domain"
+                      type="text"
+                      className="w-full px-4 py-2 rounded-l-xl bg-white border border-gray-300 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4A90E2]"
+                      placeholder="yourdomain"
+                      value={domain}
+                      onChange={e => setDomain(e.target.value.replace(/\s/g, ''))}
+                    />
+                    <span className="px-4 py-2 rounded-r-xl bg-gray-100 border border-l-0 border-gray-300 text-gray-600 select-none">.vercel.app</span>
+                  </div>
+                </div>
+                {/* Template by input */}
+                <div>
+                  <label htmlFor="templateBy" className="block text-sm font-medium text-gray-700 mb-1">Template by</label>
+                  <input
+                    id="templateBy"
+                    name="templateBy"
+                    type="text"
+                    className="w-full px-4 py-2 rounded-xl bg-white border border-gray-300 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4A90E2]"
+                    placeholder="your org's name"
+                    value={templateBy}
+                    readOnly
+                  />
+                </div>
+                {/* Template input (now below template by) */}
+                <div>
+                  <label htmlFor="template" className="block text-sm font-medium text-gray-700 mb-1">Template</label>
+                  <input
+                    id="template"
+                    name="template"
+                    type="text"
+                    className="w-full px-4 py-2 rounded-xl bg-white border border-gray-300 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4A90E2]"
+                    placeholder="Enter template name"
+                    value={template}
+                    onChange={e => setTemplate(e.target.value)}
+                  />
+                </div>
+                {/* Caption writer */}
                 <ControlPanel
                   caption={caption}
                   onCaptionChange={setCaption}

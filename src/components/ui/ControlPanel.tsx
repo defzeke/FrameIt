@@ -130,7 +130,7 @@ interface ControlPanelProps {
 			<div>
 				<h2 className="text-2xl font-bold mb-4 text-gray-800">Caption Writer</h2>
 				<div 
-					className="bg-white/80 rounded-3xl shadow-xl px-6 py-3 w-full min-h-[180px] min-w-[600px] border border-[#e0e7ef] backdrop-blur-md flex flex-col gap-6"
+					className="bg-white/80 rounded-3xl shadow-xl px-6 py-3 w-full min-h-[80px] min-w-[300px] border border-[#e0e7ef] backdrop-blur-md flex flex-col gap-6"
 					style={{
 						background: `linear-gradient(135deg, #fff 70%, ${backgroundColor}10 100%)`,
 						boxShadow: '0 8px 32px 0 rgba(74,144,226,0.10), 0 1.5px 8px 0 rgba(80,227,194,0.08)'
@@ -199,7 +199,7 @@ interface ControlPanelProps {
 						</button>
 						<div
 							ref={editorRef}
-							className="w-full p-6 rounded-lg border-2 border-gray-200 focus:border-blue-400 focus:outline-none resize-none text-gray-700 bg-white min-h-[300px] min-w-[500px] text-lg"
+							className="w-full p-2 rounded-lg border-2 border-gray-200 focus:border-blue-400 focus:outline-none resize-none text-gray-700 bg-white min-h-[200px] min-w-[200px] text-base"
 							contentEditable
 							suppressContentEditableWarning
 							onInput={handleInput}

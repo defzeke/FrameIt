@@ -28,13 +28,13 @@ export default function UploadSection() {
             } else {
                 window.location.href = '/';
             }
-        } catch (err) {
+        } catch {
             window.location.href = '/';
         }
     };
 
     useEffect(() => {
-        setSavedFrames(getAllFrames());
+        setTimeout(() => setSavedFrames(getAllFrames()), 0);
     }, []);
 
     const handleDelete = (frameId: string) => {
@@ -69,9 +69,9 @@ export default function UploadSection() {
                             <div className="flex flex-col items-start w-full" style={{maxWidth: '180px'}}>
                                 {(() => {
                                     const words = displayName.split(' ');
-                                    let lines = [];
+                                    const lines = [];
                                     let currentLine = '';
-                                    for (let word of words) {
+                                    for (const word of words) {
                                         if ((currentLine + ' ' + word).trim().length > 18 && currentLine.length > 0) {
                                             lines.push(currentLine.trim());
                                             currentLine = word;

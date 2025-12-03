@@ -7,7 +7,7 @@ export function useFrames() {
   useEffect(() => {
     const savedFrames = getAllFrames();
     const framesArray = Object.values(savedFrames);
-    setFrames(framesArray);
+    setTimeout(() => setFrames(framesArray), 0);
   }, []);
 
   return frames;

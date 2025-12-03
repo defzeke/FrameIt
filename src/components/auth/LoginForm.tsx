@@ -30,7 +30,7 @@ export default function LoginPage() {
       } else {
         window.location.href = '/upload';
       }
-    } catch (err) {
+    } catch {
       setLoading(false);
       setError('Network error');
     }

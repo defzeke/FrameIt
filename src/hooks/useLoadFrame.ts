@@ -9,25 +9,30 @@ export function useLoadFrame(frameId: string) {
 
   useEffect(() => {
     if (!frameId) {
-      setTimeout(() => {
-        setNotFound(true);
-        setLoading(false);
-      }, 0);
+      setNotFound(true);
+      setLoading(false);
       return;
     }
-    const savedFrame = getFrame(frameId);
-    if (savedFrame) {
-      setTimeout(() => {
-        setFrame(savedFrame);
-        setUserCaption(savedFrame.caption);
-        setLoading(false);
-      }, 0);
-    } else {
-      setTimeout(() => {
+
+    const loadFrame = async () => {
+      try {
+        const savedFrame = await getFrame(frameId);
+        if (savedFrame) {
+          setFrame(savedFrame);
+          setUserCaption(savedFrame.caption);
+          setNotFound(false);
+        } else {
+          setNotFound(true);
+        }
+      } catch (error) {
+        console.error('Failed to load frame:', error);
         setNotFound(true);
+      } finally {
         setLoading(false);
-      }, 0);
-    }
+      }
+    };
+
+    loadFrame();
   }, [frameId]);
 
   return { frame, loading, notFound, userCaption, setUserCaption };

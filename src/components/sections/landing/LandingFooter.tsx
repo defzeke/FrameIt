@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
+import { Instagram, Linkedin, Facebook } from 'lucide-react';
 
 export default function LandingFooter() {
   const router = useRouter();
@@ -55,23 +56,60 @@ export default function LandingFooter() {
           <div>
             <h4 className="font-bold mb-3 text-white/90 tracking-wide">Support</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-yellow-200 transition-colors cursor-pointer font-medium">Report an Issue</a></li>
-              <li><a href="#" className="hover:text-yellow-200 transition-colors cursor-pointer font-medium">Help Center</a></li>
+              <li>
+                <a
+                  href="https://www.facebook.com/icpepse.pupmanila"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-yellow-200 transition-colors cursor-pointer font-medium"
+                >
+                  Report an Issue
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.facebook.com/icpepse.pupmanila"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-yellow-200 transition-colors cursor-pointer font-medium"
+                >
+                  Help Center
+                </a>
+              </li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-bold mb-3 text-white/90 tracking-wide">Contact Us</h4>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href={`mailto:${contactEmail}`}
-                  className="hover:text-yellow-200 transition-colors cursor-pointer font-medium"
-                >
-                  Email
-                </a>
-              </li>
-            </ul>
+            <div className="flex gap-4 items-center mt-2">
+              <a
+                href="https://www.instagram.com/icpep.se_pup/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-yellow-200 transition-colors cursor-pointer"
+                title="Instagram"
+              >
+                <Instagram size={24} />
+              </a>
+              <a
+                href="https://www.facebook.com/icpepse.pupmanila"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-yellow-200 transition-colors cursor-pointer"
+                title="Facebook"
+              >
+                <Facebook size={24} />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/icpepse-pupmanila/posts/?feedView=all"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-yellow-200 transition-colors cursor-pointer"
+                title="LinkedIn"
+              >
+                <Linkedin size={24} />
+              </a>
+            </div>
           </div>
         </div>
 

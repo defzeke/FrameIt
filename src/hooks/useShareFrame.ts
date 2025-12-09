@@ -61,7 +61,10 @@ export function useShareFrame({ imageUrl, scale, rotate, caption, frameColor, te
         setLoading(false);
         return;
       }
-      const baseUrl = window.location.origin;
+      // Use custom domain if provided, otherwise use current origin
+      const baseUrl = customPath && customPath.trim() 
+        ? `https://${customPath}.vercel.app` 
+        : window.location.origin;
       const url = `${baseUrl}/user/${currentFrameId}`;
       setShareUrl(url);
       setShowShareModal(true);

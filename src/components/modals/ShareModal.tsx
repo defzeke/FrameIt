@@ -10,16 +10,20 @@ interface ShareModalProps {
   isOpen: boolean;
   onClose: () => void;
   shareUrl: string;
+  displayUrl?: string;
 }
 
-export default function ShareModal({ isOpen, onClose, shareUrl }: ShareModalProps) {
+export default function ShareModal({ isOpen, onClose, shareUrl, displayUrl }: ShareModalProps) {
   const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
 
+  const urlToDisplay = displayUrl || shareUrl;
+
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      // Copy the display URL, not the actual URL
+      await navigator.clipboard.writeText(urlToDisplay);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
@@ -35,7 +39,7 @@ export default function ShareModal({ isOpen, onClose, shareUrl }: ShareModalProp
 
   return (
     <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4"
+      className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50 px-4"
       onClick={handleBackdropClick}
     >
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-in fade-in zoom-in duration-200">
@@ -64,9 +68,14 @@ export default function ShareModal({ isOpen, onClose, shareUrl }: ShareModalProp
         {/* Link display with copy button */}
         <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-4 mb-6 flex items-center gap-3">
           <div className="flex-1 overflow-hidden">
-            <p className="text-sm text-gray-700 truncate font-mono">
-              {shareUrl}
-            </p>
+            <a
+              href={shareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-blue-600 hover:text-blue-800 underline truncate font-mono block"
+            >
+              {urlToDisplay}
+            </a>
           </div>
           
           <button

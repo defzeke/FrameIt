@@ -1,5 +1,3 @@
-
-
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
@@ -15,8 +13,8 @@ export async function POST(request: Request) {
 		return NextResponse.json({ error: error.message }, { status: 401 });
 	}
 
-	// Set JWT in HTTP-only cookie
-	const response = NextResponse.json({ user: data.user });
+	// Set both the JWT token and session
+	const response = NextResponse.json({ user: data.user, session: data.session });
 	if (data.session && data.session.access_token) {
 		response.cookies.set('frameit_token', data.session.access_token, {
 			httpOnly: true,
@@ -25,6 +23,17 @@ export async function POST(request: Request) {
 			path: '/',
 			maxAge: 60 * 60 * 24 * 7 // 7 days
 		});
+		
+		// Also set refresh token
+		if (data.session.refresh_token) {
+			response.cookies.set('frameit_refresh_token', data.session.refresh_token, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+				sameSite: 'lax',
+				path: '/',
+				maxAge: 60 * 60 * 24 * 7 // 7 days
+			});
+		}
 	}
 	return response;
 }

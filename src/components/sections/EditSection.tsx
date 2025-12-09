@@ -8,12 +8,16 @@ import React, { useState } from 'react';
 import { useUserDisplayName } from '@/hooks/useUserDisplayName';
 import YellowButton from '@/components/ui/YellowButton';
 import ShareModal from '@/components/modals/ShareModal';
+import { useRouter } from 'next/navigation';
 import { useShareFrame } from '@/hooks/useShareFrame';
 import { useRedirectIfNoImage } from '@/hooks/useRedirectIfNoImage';
 
+
 export default function EditSection() {
+  const router = useRouter();
   const [domain, setDomain] = useState('');
   const [template, setTemplate] = useState('');
+  const [showLoading, setShowLoading] = useState(false);
   const templateBy = useUserDisplayName();
   const {
     imageUrl,
@@ -27,15 +31,21 @@ export default function EditSection() {
   } = useFrame();
 
   useRedirectIfNoImage(imageUrl);
-  const { handleShare, showShareModal, setShowShareModal, shareUrl } = useShareFrame({
+  const { handleShare, showShareModal, setShowShareModal, shareUrl, loading } = useShareFrame({
     imageUrl: imageUrl as string,
     scale,
     rotate,
     caption,
     frameColor: frameColor as string,
+    templateName: template,
+    customPath: domain,
     frameId,
     setFrameId,
   });
+
+  React.useEffect(() => {
+    setShowLoading(loading);
+  }, [loading]);
 
   const primaryBlue = frameColor || '#4A90E2';
   const accentGreen = '#50E3C2';
@@ -86,6 +96,27 @@ export default function EditSection() {
       />
 
       <main className="grow flex items-center justify-center py-12 px-6 relative z-10">
+        {showLoading && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-blue-400/60 via-white/40 to-yellow-200/60 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl shadow-2xl px-10 py-8 flex flex-col items-center border-2 border-blue-200 animate-fadeIn">
+              <div className="relative mb-6">
+                <div className="w-14 h-14 border-4 border-blue-500 border-t-yellow-400 border-b-yellow-400 border-l-blue-400 border-r-blue-400 rounded-full animate-spin"></div>
+                <svg className="absolute top-2 left-2 w-10 h-10 text-yellow-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" strokeWidth="2" /></svg>
+              </div>
+              <span className="text-xl font-bold text-blue-700 mb-2 tracking-wide">Sharing your frame...</span>
+              <span className="text-base text-gray-500">Please wait while we save and generate your link.</span>
+            </div>
+            <style>{`
+              @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.95); }
+                to { opacity: 1; transform: scale(1); }
+              }
+              .animate-fadeIn {
+                animation: fadeIn 0.3s ease;
+              }
+            `}</style>
+          </div>
+        )}
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="flex flex-col items-center gap-6">
@@ -156,7 +187,10 @@ export default function EditSection() {
       <Footer />
       <ShareModal
         isOpen={showShareModal}
-        onClose={() => setShowShareModal(false)}
+        onClose={() => {
+          setShowShareModal(false);
+          window.location.href = '/upload';
+        }}
         shareUrl={shareUrl}
       />
     </div>

@@ -70,6 +70,8 @@ interface ControlPanelProps {
 		function convertToUnicodeStyledText(html: string) {
 			const temp = document.createElement('div');
 			temp.innerHTML = html;
+			let result = '';
+			
 			function walk(node: Node, style: { bold?: boolean; italic?: boolean }) {
 				if (node.nodeType === Node.TEXT_NODE) {
 					let text = node.textContent || '';
@@ -80,18 +82,46 @@ interface ControlPanelProps {
 					} else if (style.italic) {
 						text = text.split('').map(c => unicodeMaps.italic[c] || c).join('');
 					}
-					node.textContent = text;
+					result += text;
 				}
 				if (node.nodeType === Node.ELEMENT_NODE) {
 					const el = node as HTMLElement;
+					
+					// Preserve links as plain URLs
+					if (el.tagName === 'A') {
+						const href = el.getAttribute('href');
+						if (href) {
+							result += href;
+						}
+						return; // Don't process children of <a> tags
+					}
+					
+					// Preserve line breaks
+					if (el.tagName === 'BR') {
+						result += '\n';
+						return;
+					}
+					
+					// Preserve paragraph/div breaks
+					if (el.tagName === 'DIV' || el.tagName === 'P') {
+						if (result && !result.endsWith('\n')) {
+							result += '\n';
+						}
+					}
+					
 					const nextStyle = { ...style };
 					if (el.tagName === 'B' || el.tagName === 'STRONG') nextStyle.bold = true;
 					if (el.tagName === 'I' || el.tagName === 'EM') nextStyle.italic = true;
 					Array.from(el.childNodes).forEach(child => walk(child, nextStyle));
+					
+					// Add newline after block elements
+					if ((el.tagName === 'DIV' || el.tagName === 'P') && !result.endsWith('\n')) {
+						result += '\n';
+					}
 				}
 			}
 			walk(temp, {});
-			return temp.textContent || '';
+			return result.trim();
 		}
 
 		const handleCopyAll = () => {
@@ -123,6 +153,25 @@ interface ControlPanelProps {
 				}
 				setCopySuccess(true);
 				setTimeout(() => setCopySuccess(false), 1200);
+			}
+		};
+
+		const handlePaste = (e: React.ClipboardEvent) => {
+			e.preventDefault();
+			const text = e.clipboardData.getData('text/plain');
+			
+			// URL regex pattern
+			const urlPattern = /(https?:\/\/[^\s]+)/g;
+			
+			// Convert URLs to clickable links
+			const htmlContent = text.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">$1</a>');
+			
+			// Insert the HTML at cursor position
+			document.execCommand('insertHTML', false, htmlContent);
+			
+			// Update the caption state
+			if (editorRef.current) {
+				onCaptionChange(editorRef.current.innerHTML);
 			}
 		};
 
@@ -203,6 +252,7 @@ interface ControlPanelProps {
 							contentEditable
 							suppressContentEditableWarning
 							onInput={handleInput}
+							onPaste={handlePaste}
 							style={{ whiteSpace: 'pre-wrap', position: 'relative', zIndex: 1 }}
 						/>
 						{/* Custom placeholder for rich text editor */}

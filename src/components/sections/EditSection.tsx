@@ -8,13 +8,13 @@ import React, { useState } from 'react';
 import { useUserDisplayName } from '@/hooks/useUserDisplayName';
 import YellowButton from '@/components/ui/YellowButton';
 import ShareModal from '@/components/modals/ShareModal';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useShareFrame } from '@/hooks/useShareFrame';
 import { useRedirectIfNoImage } from '@/hooks/useRedirectIfNoImage';
 
 
 export default function EditSection() {
-  const router = useRouter();
+  // const router = useRouter();
   const [domain, setDomain] = useState('');
   const [template, setTemplate] = useState('');
   const [showLoading, setShowLoading] = useState(false);

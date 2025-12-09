@@ -4,14 +4,107 @@ import { useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { Copy, Check } from 'lucide-react';
 import Footer from '@/components/sections/Footer';
-import Slider from '@/components/ui/Slider';
-import TextArea from '@/components/ui/TextArea';
 import YellowButton from '@/components/ui/YellowButton';
 import { downloadFrameImage } from '@/lib/downloadFrameImage';
 import { useDraggableImage } from '@/hooks/useDraggableImage';
 import { useLoadFrame } from '@/hooks/useLoadFrame';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import FramePreview from '@/components/ui/FramePreview';
+
+// Inline Slider component
+interface SliderProps {
+	label: string;
+	value: number;
+	onChange: (value: number) => void;
+	min?: number;
+	max?: number;
+	step?: number;
+}
+
+function Slider({
+	label,
+	value,
+	onChange,
+	min = 0,
+	max = 100,
+	step = 1
+}: SliderProps) {
+	return (
+		 <div className="mb-4">
+				 <label className="block text-gray-700 text-sm font-medium mb-2">
+						 {label}: <span className="font-mono text-gray-900">{value}{label === 'Rotate' ? '°' : '%'}</span>
+				 </label>
+				 <input
+						 type="range"
+						 min={min}
+						 max={max}
+						 step={step}
+						 value={value}
+						 onChange={(e) => onChange(Number(e.target.value))}
+						 className="w-full h-2 bg-gray-200 rounded appearance-none cursor-pointer focus:outline-none slider"
+						 style={{ accentColor: '#333' }}
+				 />
+				 <style jsx>{`
+					 input[type='range'].slider::-webkit-slider-thumb {
+						 appearance: none;
+						 width: 16px;
+						 height: 16px;
+						 background: #fff;
+						 border: 2px solid #333;
+						 border-radius: 50%;
+					 }
+					 input[type='range'].slider::-moz-range-thumb {
+						 width: 16px;
+						 height: 16px;
+						 background: #fff;
+						 border: 2px solid #333;
+						 border-radius: 50%;
+					 }
+					 input[type='range'].slider::-ms-thumb {
+						 width: 16px;
+						 height: 16px;
+						 background: #fff;
+						 border: 2px solid #333;
+						 border-radius: 50%;
+					 }
+					 input[type='range'].slider::-webkit-slider-thumb:active {
+						 background: #eee;
+					 }
+					 input[type='range'].slider::-moz-range-thumb:active {
+						 background: #eee;
+					 }
+					 input[type='range'].slider::-ms-thumb:active {
+						 background: #eee;
+					 }
+				 `}</style>
+		 </div>
+	);
+}
+
+// Inline TextArea component
+interface TextAreaProps {
+	value: string;
+	onChange: (value: string) => void;
+	placeholder?: string;
+	rows?: number;
+}
+
+function TextArea({
+	value,
+	onChange,
+	placeholder = "Enter your caption here...",
+	rows = 6
+}: TextAreaProps) {
+	return (
+		<textarea
+			value={value}
+			onChange={(e) => onChange(e.target.value)}
+			placeholder={placeholder}
+			rows={rows}
+			className="w-full p-4 rounded-lg border-2 border-gray-200 focus:border-blue-400 focus:outline-none resize-none text-gray-700 placeholder-gray-400"
+		/>
+	);
+}
 
 export default function SharedFrameSection() {
   const params = useParams();

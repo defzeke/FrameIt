@@ -10,6 +10,7 @@ interface FrameData {
   rotate: number;
   frameColor: string;
   caption: string;
+  templateName: string;
   
   frameId: string | null;
 }
@@ -21,6 +22,7 @@ interface FrameContextType extends FrameData {
   setRotate: (rotate: number) => void;
   setFrameColor: (color: string) => void;
   setCaption: (caption: string) => void;
+  setTemplateName: (name: string) => void;
   setFrameId: (id: string | null) => void;
   
   resetFrame: () => void;
@@ -34,6 +36,7 @@ const defaultFrameData: FrameData = {
   rotate: 0,
   frameColor: '#4A90E2',
   caption: '',
+  templateName: '',
   frameId: null,
 };
 
@@ -71,6 +74,10 @@ export function FrameProvider({ children }: { children: ReactNode }) {
     setFrameData(prev => ({ ...prev, caption }));
   };
 
+  const setTemplateName = (name: string) => {
+    setFrameData(prev => ({ ...prev, templateName: name }));
+  };
+
   const setFrameId = (id: string | null) => {
     setFrameData(prev => ({ ...prev, frameId: id }));
   };
@@ -94,6 +101,7 @@ export function FrameProvider({ children }: { children: ReactNode }) {
     setRotate,
     setFrameColor,
     setCaption,
+    setTemplateName,
     setFrameId,
     resetFrame,
     loadFrame,

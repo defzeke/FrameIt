@@ -16,7 +16,6 @@ import { saveFrame, fileToBase64 } from '@/lib/frameStorage';
 
 export default function EditSection() {
   // const router = useRouter();
-  const [template, setTemplate] = useState('');
   const [showLoading, setShowLoading] = useState(false);
   const [showSaveButton, setShowSaveButton] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -27,6 +26,8 @@ export default function EditSection() {
     rotate,
     caption,
     frameColor,
+    templateName,
+    setTemplateName,
     frameId,
     setCaption,
     setFrameId,
@@ -35,7 +36,7 @@ export default function EditSection() {
   useRedirectIfNoImage(imageUrl);
   const { handleShare, showShareModal, setShowShareModal, shareUrl, loading } = useShareFrame({
     imageUrl: imageUrl as string,
-    templateName: template,
+    templateName: templateName,
     frameId,
     setFrameId,
   });
@@ -61,7 +62,7 @@ export default function EditSection() {
         rotate,
         caption,
         frameColor: frameColor || '#4A90E2',
-        templateName: template || 'name',
+        templateName: templateName || 'name',
         createdAt: new Date().toISOString(),
       };
       const saved = await saveFrame(frameData);
@@ -181,8 +182,8 @@ export default function EditSection() {
                     type="text"
                     className="w-full px-4 py-2 rounded-xl bg-white border border-gray-300 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4A90E2]"
                     placeholder="Enter template name"
-                    value={template}
-                    onChange={e => setTemplate(e.target.value.replace(/\s+/g, '-'))}
+                    value={templateName}
+                    onChange={e => setTemplateName(e.target.value.replace(/\s+/g, '-'))}
                   />
                 </div>
                 {/* Caption writer */}

@@ -45,6 +45,7 @@ export default function UploadSection() {
             rotate: frame.rotate,
             caption: frame.caption,
             frameColor: frame.frameColor,
+            templateName: frame.templateName || '',
             frameId: frame.frameId,
         });
         router.push('/edit');

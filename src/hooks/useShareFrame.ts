@@ -6,7 +6,6 @@ type UseShareFrameArgs = {
   caption: string;
   frameColor: string;
   templateName?: string;
-  customPath?: string;
   frameId: string | null | undefined;
   setFrameId: (id: string) => void;
 };
@@ -17,15 +16,13 @@ type UseShareFrameResult = {
   showShareModal: boolean;
   setShowShareModal: (open: boolean) => void;
   shareUrl: string;
-  displayUrl: string;
   loading: boolean;
 };
 
 
-export function useShareFrame({ imageUrl, scale, rotate, caption, frameColor, templateName, customPath, frameId, setFrameId }: UseShareFrameArgs): UseShareFrameResult {
+export function useShareFrame({ imageUrl, scale, rotate, caption, frameColor, templateName, frameId, setFrameId }: UseShareFrameArgs): UseShareFrameResult {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
-  const [displayUrl, setDisplayUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
   const generateTempFrameId = () => {
@@ -55,7 +52,6 @@ export function useShareFrame({ imageUrl, scale, rotate, caption, frameColor, te
         caption,
         frameColor: frameColor || '#4A90E2',
         templateName: templateName || 'name',
-        customPath: customPath ? `${customPath}.vercel.app` : '',
         createdAt: new Date().toISOString(),
       };
       const saved = await saveFrame(frameData);
@@ -63,16 +59,9 @@ export function useShareFrame({ imageUrl, scale, rotate, caption, frameColor, te
         setLoading(false);
         return;
       }
-      // Always use the actual deployed URL to avoid 404 errors
       const baseUrl = window.location.origin;
       const url = `${baseUrl}/${currentFrameId}`;
       setShareUrl(url);
-      
-      // Set display URL: use custom path with frameId if provided, otherwise use real URL
-      const display = customPath && customPath.trim()
-        ? `https://${customPath}.vercel.app/${currentFrameId}`
-        : url;
-      setDisplayUrl(display);
       
       setShowShareModal(true);
     } catch (error) {
@@ -83,7 +72,7 @@ export function useShareFrame({ imageUrl, scale, rotate, caption, frameColor, te
     }
   };
 
-  return { handleShare, showShareModal, setShowShareModal, shareUrl, displayUrl, loading };
+  return { handleShare, showShareModal, setShowShareModal, shareUrl, loading };
 }
 import { useState } from 'react';
 import { saveFrame, fileToBase64 } from '@/lib/frameStorage';

@@ -9,7 +9,6 @@ export interface SavedFrame {
 	caption: string;
 	frameColor: string;
 	templateName?: string;
-	customPath?: string;
 	createdAt: string;
 	userId?: string;
 }
@@ -105,7 +104,6 @@ export const saveFrame = async (frame: SavedFrame): Promise<boolean> => {
 				caption: frame.caption,
 				image_url: imageUrl,
 				template_name: frame.templateName || 'name',
-				custom_path: frame.customPath || '',
 				sharing: true,
 			})
 			.eq('id', existingFrame.id);			if (dbError) {
@@ -124,7 +122,6 @@ export const saveFrame = async (frame: SavedFrame): Promise<boolean> => {
 				template_name: frame.templateName || 'name',
 				sharing: true,
 				frame_id: frame.frameId,
-				custom_path: frame.customPath || '',
 				created_at: frame.createdAt,
 			});			if (dbError) {
 				console.error('Failed to insert frame:', dbError);
@@ -161,7 +158,6 @@ export const getFrame = async (frameId: string): Promise<SavedFrame | null> => {
 			rotate: 0,
 			caption: data.caption || '',
 			frameColor: '#4A90E2', // Default color
-			customPath: data.custom_path,
 			createdAt: data.created_at,
 			userId: data.user_id,
 		};
@@ -194,7 +190,6 @@ export const getFramesByUserId = async (userId: string): Promise<SavedFrame[]> =
 			caption: record.caption || '',
 			frameColor: '#4A90E2',
 			templateName: record.template_name || '',
-			customPath: record.custom_path,
 			createdAt: record.created_at,
 			userId: record.user_id,
 		}));
@@ -234,7 +229,6 @@ export const getAllFrames = async (): Promise<Record<string, SavedFrame>> => {
 				caption: record.caption || '',
 				frameColor: '#4A90E2',
 				templateName: record.template_name || '',
-				customPath: record.custom_path,
 				createdAt: record.created_at,
 				userId: record.user_id,
 			};

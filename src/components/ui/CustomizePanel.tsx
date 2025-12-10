@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useEffect } from 'react';
-import { Copy, Check } from 'lucide-react';
+import { useRef, useEffect, useState } from 'react';
+import { Copy, Check, Link } from 'lucide-react';
 import YellowButton from './YellowButton';
 
 // Slider component
@@ -87,6 +87,9 @@ function TextArea({
 	placeholder = "Enter your caption here..."
 }: TextAreaProps) {
 	const editorRef = useRef<HTMLDivElement>(null);
+	const [activeFormats, setActiveFormats] = useState({ bold: false, italic: false });
+	const [showLinkInput, setShowLinkInput] = useState(false);
+	const [linkUrl, setLinkUrl] = useState('');
 	
 	const handleInput = () => {
 		if (editorRef.current) {
@@ -100,19 +103,175 @@ function TextArea({
 			editorRef.current.innerHTML = value;
 		}
 	}, [value]);
+
+	// Update format state on selection change
+	const updateActiveFormats = () => {
+		const selection = window.getSelection();
+		if (!selection || !selection.rangeCount) return;
+		
+		const range = selection.getRangeAt(0);
+		let node = range.commonAncestorContainer;
+		if (node.nodeType === Node.TEXT_NODE) node = node.parentNode as Node;
+		
+		let bold = false;
+		let italic = false;
+		
+		while (node && node !== editorRef.current) {
+			if (node instanceof HTMLElement) {
+				const tag = node.tagName;
+				if (tag === 'B' || tag === 'STRONG') bold = true;
+				if (tag === 'I' || tag === 'EM') italic = true;
+			}
+			node = node.parentNode as Node;
+		}
+		
+		setActiveFormats({ bold, italic });
+	};
+
+	useEffect(() => {
+		const handler = () => updateActiveFormats();
+		document.addEventListener('selectionchange', handler);
+		return () => document.removeEventListener('selectionchange', handler);
+	}, []);
+
+	const formatText = (command: string) => {
+		document.execCommand(command, false);
+		updateActiveFormats();
+		if (editorRef.current) {
+			onChange(editorRef.current.innerHTML);
+		}
+	};
+
+	const handleAddLink = () => {
+		const selection = window.getSelection();
+		if (!selection || selection.toString().trim() === '') {
+			alert('Please select some text first');
+			return;
+		}
+		setShowLinkInput(true);
+	};
+
+	const handleInsertLink = () => {
+		if (!linkUrl.trim()) {
+			alert('Please enter a URL');
+			return;
+		}
+		
+		const selection = window.getSelection();
+		if (selection && selection.toString().trim()) {
+			const selectedText = selection.toString();
+			const linkHtml = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">${selectedText}</a>`;
+			document.execCommand('insertHTML', false, linkHtml);
+			
+			if (editorRef.current) {
+				onChange(editorRef.current.innerHTML);
+			}
+		}
+		
+		setShowLinkInput(false);
+		setLinkUrl('');
+	};
+
+	const handleCancelLink = () => {
+		setShowLinkInput(false);
+		setLinkUrl('');
+	};
+
+	const handlePaste = (e: React.ClipboardEvent) => {
+		e.preventDefault();
+		const text = e.clipboardData.getData('text/plain');
+		
+		// URL regex pattern
+		const urlPattern = /(https?:\/\/[^\s]+)/g;
+		
+		// Convert URLs to clickable links
+		const htmlContent = text.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">$1</a>');
+		
+		// Insert the HTML at cursor position
+		document.execCommand('insertHTML', false, htmlContent);
+		
+		// Update the caption state
+		if (editorRef.current) {
+			onChange(editorRef.current.innerHTML);
+		}
+	};
 	
 	return (
 		<div className="relative w-full">
+			{/* Formatting Toolbar */}
+			<div className="flex gap-2 mb-2">
+				<button
+					type="button"
+					className={`px-2 py-1 rounded border border-gray-300 text-sm font-bold ${activeFormats.bold ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 hover:bg-gray-200'}`}
+					title="Bold"
+					onClick={() => formatText('bold')}
+				>
+					<b>B</b>
+				</button>
+				<button
+					type="button"
+					className={`px-2 py-1 rounded border border-gray-300 text-sm italic ${activeFormats.italic ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 hover:bg-gray-200'}`}
+					title="Italic"
+					onClick={() => formatText('italic')}
+				>
+					<i>I</i>
+				</button>
+				<button
+					type="button"
+					className="px-2 py-1 rounded border border-gray-300 text-sm bg-gray-100 hover:bg-gray-200"
+					title="Insert Link"
+					onClick={handleAddLink}
+				>
+					<Link size={16} />
+				</button>
+			</div>
+			
+			{/* Link Input Modal */}
+			{showLinkInput && (
+				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+					<div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+						<h3 className="text-lg font-bold mb-4">Insert Link</h3>
+						<input
+							type="url"
+							value={linkUrl}
+							onChange={(e) => setLinkUrl(e.target.value)}
+							placeholder="Enter URL (e.g., https://example.com)"
+							className="w-full p-2 border border-gray-300 rounded mb-4"
+							autoFocus
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') handleInsertLink();
+								if (e.key === 'Escape') handleCancelLink();
+							}}
+						/>
+						<div className="flex gap-2">
+							<button
+								onClick={handleCancelLink}
+								className="flex-1 px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
+							>
+								Cancel
+							</button>
+							<button
+								onClick={handleInsertLink}
+								className="flex-1 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+							>
+								Insert
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
+			
 			<div
 				ref={editorRef}
 				className="w-full p-2 rounded-lg border-2 border-gray-200 focus:border-blue-400 focus:outline-none text-gray-700 bg-white min-h-[120px] text-base"
 				contentEditable
 				suppressContentEditableWarning
 				onInput={handleInput}
+				onPaste={handlePaste}
 				style={{ whiteSpace: 'pre-wrap', position: 'relative', zIndex: 1 }}
 			/>
 			{(!value || value === '<br>') && (
-				<div className="absolute left-0 top-0 p-2 text-gray-400 pointer-events-none select-none" style={{ zIndex: 0 }}>
+				<div className="absolute left-0 top-0 p-2 text-gray-400 pointer-events-none select-none" style={{ zIndex: 0, marginTop: '38px' }}>
 					{placeholder}
 				</div>
 			)}

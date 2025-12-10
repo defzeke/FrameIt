@@ -16,7 +16,6 @@ import { saveFrame, fileToBase64 } from '@/lib/frameStorage';
 
 export default function EditSection() {
   // const router = useRouter();
-  const [domain, setDomain] = useState('');
   const [template, setTemplate] = useState('');
   const [showLoading, setShowLoading] = useState(false);
   const [showSaveButton, setShowSaveButton] = useState(false);
@@ -34,14 +33,13 @@ export default function EditSection() {
   } = useFrame();
 
   useRedirectIfNoImage(imageUrl);
-  const { handleShare, showShareModal, setShowShareModal, shareUrl, displayUrl, loading } = useShareFrame({
+  const { handleShare, showShareModal, setShowShareModal, shareUrl, loading } = useShareFrame({
     imageUrl: imageUrl as string,
     scale,
     rotate,
     caption,
     frameColor: frameColor as string,
     templateName: template,
-    customPath: domain,
     frameId,
     setFrameId,
   });
@@ -68,7 +66,6 @@ export default function EditSection() {
         caption,
         frameColor: frameColor || '#4A90E2',
         templateName: template || 'name',
-        customPath: domain ? `${domain}.vercel.app` : '',
         createdAt: new Date().toISOString(),
       };
       const saved = await saveFrame(frameData);
@@ -166,22 +163,6 @@ export default function EditSection() {
             </div>
             <div className="flex items-center justify-center lg:justify-center">
               <div className="w-full max-w-md flex flex-col gap-4 mb-20">
-                {/* Domain name input */}
-                <div>
-                  <label htmlFor="domain" className="block text-sm font-medium text-gray-700 mb-1">Custom Path</label>
-                  <div className="flex items-center">
-                    <input
-                      id="domain"
-                      name="domain"
-                      type="text"
-                      className="w-full px-4 py-2 rounded-l-xl bg-white border border-gray-300 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4A90E2]"
-                      placeholder="yourdomain"
-                      value={domain}
-                      onChange={e => setDomain(e.target.value.replace(/\s/g, ''))}
-                    />
-                    <span className="px-4 py-2 rounded-r-xl bg-gray-100 border border-l-0 border-gray-300 text-gray-600 select-none">.vercel.app</span>
-                  </div>
-                </div>
                 {/* Template by input */}
                 <div>
                   <label htmlFor="templateBy" className="block text-sm font-medium text-gray-700 mb-1">Template by</label>
@@ -228,7 +209,6 @@ export default function EditSection() {
           setShowSaveButton(true);
         }}
         shareUrl={shareUrl}
-        displayUrl={displayUrl}
       />
       {showSaveButton && (
         <div className="fixed bottom-8 right-8 z-40">

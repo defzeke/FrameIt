@@ -1,5 +1,5 @@
 "use client";
-import { Copy } from 'lucide-react';
+import { Copy, Link } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import YellowButton from './YellowButton';
 import { useRichTextFormatting } from '../../hooks/useRichTextFormatting';
@@ -34,10 +34,12 @@ interface ControlPanelProps {
 			handleEmojiSelect,
 		} = useEmojiPicker((emoji) => formatText('insertText', emoji));
 
-		const [copySuccess, setCopySuccess] = useState(false);
+	const [copySuccess, setCopySuccess] = useState(false);
+	const [showLinkInput, setShowLinkInput] = useState(false);
+	const [linkUrl, setLinkUrl] = useState('');
 
-		// Set initial content only once
-		useEffect(() => {
+	// Set initial content only once
+	useEffect(() => {
 			if (editorRef.current && caption && editorRef.current.innerHTML !== caption) {
 				editorRef.current.innerHTML = caption;
 				setRichCaption(caption);
@@ -156,6 +158,41 @@ interface ControlPanelProps {
 			}
 		};
 
+		const handleAddLink = () => {
+			const selection = window.getSelection();
+			if (!selection || selection.toString().trim() === '') {
+				alert('Please select some text first');
+				return;
+			}
+			setShowLinkInput(true);
+		};
+
+		const handleInsertLink = () => {
+			if (!linkUrl.trim()) {
+				alert('Please enter a URL');
+				return;
+			}
+			
+			const selection = window.getSelection();
+			if (selection && selection.toString().trim()) {
+				const selectedText = selection.toString();
+				const linkHtml = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">${selectedText}</a>`;
+				document.execCommand('insertHTML', false, linkHtml);
+				
+				if (editorRef.current) {
+					onCaptionChange(editorRef.current.innerHTML);
+				}
+			}
+			
+			setShowLinkInput(false);
+			setLinkUrl('');
+		};
+
+		const handleCancelLink = () => {
+			setShowLinkInput(false);
+			setLinkUrl('');
+		};
+
 		const handlePaste = (e: React.ClipboardEvent) => {
 			e.preventDefault();
 			const text = e.clipboardData.getData('text/plain');
@@ -201,10 +238,17 @@ interface ControlPanelProps {
 							title="Italic"
 							onClick={() => formatText('italic')}
 						>
-							<i>I</i>
-						</button>
-						{/* Underline, Strikethrough, Font Family, and Insert Link removed */}
-						{/* Emoji Picker */}
+						<i>I</i>
+					</button>
+					<button
+						type="button"
+						className="px-2 py-1 rounded border border-gray-300 text-sm bg-gray-100 hover:bg-gray-200"
+						title="Insert Link"
+						onClick={handleAddLink}
+					>
+						<Link size={16} />
+					</button>
+					{/* Emoji Picker */}
 						<div className="relative">
 							<button
 								type="button"
@@ -233,6 +277,40 @@ interface ControlPanelProps {
 							)}
 						</div>
 					</div>
+					{/* Link Input Modal */}
+					{showLinkInput && (
+						<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+							<div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+								<h3 className="text-lg font-bold mb-4">Insert Link</h3>
+								<input
+									type="url"
+									value={linkUrl}
+									onChange={(e) => setLinkUrl(e.target.value)}
+									placeholder="Enter URL (e.g., https://example.com)"
+									className="w-full p-2 border border-gray-300 rounded mb-4"
+									autoFocus
+									onKeyDown={(e) => {
+										if (e.key === 'Enter') handleInsertLink();
+										if (e.key === 'Escape') handleCancelLink();
+									}}
+								/>
+								<div className="flex gap-2">
+									<button
+										onClick={handleCancelLink}
+										className="flex-1 px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
+									>
+										Cancel
+									</button>
+									<button
+										onClick={handleInsertLink}
+										className="flex-1 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+									>
+										Insert
+									</button>
+								</div>
+							</div>
+						</div>
+					)}
 					{/* Rich Text Editor */}
 					<div className="relative w-full mb-4">
 						{/* Copy All button */}

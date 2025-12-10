@@ -10,20 +10,16 @@ interface ShareModalProps {
   isOpen: boolean;
   onClose: () => void;
   shareUrl: string;
-  displayUrl?: string;
 }
 
-export default function ShareModal({ isOpen, onClose, shareUrl, displayUrl }: ShareModalProps) {
+export default function ShareModal({ isOpen, onClose, shareUrl }: ShareModalProps) {
   const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
 
-  const urlToDisplay = displayUrl || shareUrl;
-
   const handleCopy = async () => {
     try {
-      // Copy the display URL, not the actual URL
-      await navigator.clipboard.writeText(urlToDisplay);
+      await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
@@ -74,7 +70,7 @@ export default function ShareModal({ isOpen, onClose, shareUrl, displayUrl }: Sh
               rel="noopener noreferrer"
               className="text-sm text-blue-600 hover:text-blue-800 underline truncate font-mono block"
             >
-              {urlToDisplay}
+              {shareUrl}
             </a>
           </div>
           

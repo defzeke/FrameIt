@@ -190,7 +190,7 @@ export default function SharedFrameSection() {
           
           <div className="mb-8 text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              Customize This Frame
+              Customize this Frame
             </h1>
             <p className="text-gray-600">
               Upload your photo and customize the frame template

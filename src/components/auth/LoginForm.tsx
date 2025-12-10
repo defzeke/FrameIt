@@ -8,6 +8,28 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [forgotPasswordMode, setForgotPasswordMode] = useState(false);
+  const [resetEmailSent, setResetEmailSent] = useState(false);
+
+  const handleForgotPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/login`,
+      });
+      if (error) {
+        setError(error.message);
+      } else {
+        setResetEmailSent(true);
+      }
+    } catch {
+      setError('Failed to send reset email');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,7 +41,7 @@ export default function LoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, remember }),
       });
       const result = await res.json();
       setLoading(false);
@@ -49,8 +71,26 @@ export default function LoginPage() {
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-b from-[#4A90E2] via-[#8CB8E8] to-white px-4">
       <div className="flex-1 flex justify-center items-center py-12">
         <div className="bg-white/90 rounded-3xl shadow-2xl px-10 py-12 w-full max-w-md border-0 backdrop-blur-md">
-          <h1 className="text-4xl font-extrabold mb-8 text-center text-black tracking-tight">Sign in</h1>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <h1 className="text-4xl font-extrabold mb-8 text-center text-black tracking-tight">
+            {forgotPasswordMode ? 'Reset Password' : 'Sign in'}
+          </h1>
+          {resetEmailSent ? (
+            <div className="text-center space-y-4">
+              <div className="text-green-600 text-sm font-medium">
+                Password reset email sent! Check your inbox.
+              </div>
+              <button
+                onClick={() => {
+                  setResetEmailSent(false);
+                  setForgotPasswordMode(false);
+                }}
+                className="text-[#4A90E2] hover:underline text-sm"
+              >
+                Back to Sign in
+              </button>
+            </div>
+          ) : (
+          <form className="space-y-6" onSubmit={forgotPasswordMode ? handleForgotPassword : handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <input
@@ -66,10 +106,17 @@ export default function LoginPage() {
                 disabled={loading}
               />
             </div>
+            {!forgotPasswordMode && (
             <div>
               <div className="flex justify-between items-center mb-1">
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                <a href="#" className="text-xs text-black hover:text-[#50E3C2] hover:underline transition-colors duration-200">Forgot your password?</a>
+                <button
+                  type="button"
+                  onClick={() => setForgotPasswordMode(true)}
+                  className="text-xs text-black hover:text-[#50E3C2] hover:underline transition-colors duration-200"
+                >
+                  Forgot your password?
+                </button>
               </div>
               <input
                 id="password"
@@ -84,6 +131,8 @@ export default function LoginPage() {
                 disabled={loading}
               />
             </div>
+            )}
+            {!forgotPasswordMode && (
             <div className="flex items-center mb-2">
               <input
                 id="remember"
@@ -96,13 +145,24 @@ export default function LoginPage() {
               />
               <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">Remember me</label>
             </div>
+            )}
             {error && (
               <div className="text-red-600 text-sm text-center font-medium">{error}</div>
             )}
             <YellowButton type="submit" className="w-full py-3 text-lg rounded-xl shadow-md hover:shadow-lg transition-all bg-[#FFD700] text-[#10151c]" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? (forgotPasswordMode ? 'Sending...' : 'Signing in...') : (forgotPasswordMode ? 'Send Reset Link' : 'Sign in')}
             </YellowButton>
+            {forgotPasswordMode && (
+              <button
+                type="button"
+                onClick={() => setForgotPasswordMode(false)}
+                className="w-full text-center text-sm text-gray-600 hover:text-[#4A90E2] transition-colors"
+              >
+                Back to Sign in
+              </button>
+            )}
           </form>
+          )}
         </div>
       </div>
     </div>

@@ -40,14 +40,25 @@ export async function downloadFrameImage({
         userImg.onerror = reject;
         userImg.src = userImage;
       });
-      ctx.save();
-      ctx.translate(size / 2, size / 2);
-      const previewSize = 600;
+
+      const previewElement = document.getElementById('frame-preview');
+      const previewSize = previewElement?.clientWidth || 620;
       const scaleFactor = size / previewSize;
-      ctx.translate(userImgPos.x * scaleFactor, userImgPos.y * scaleFactor);
+      const sourceWidth = userImg.naturalWidth || userImg.width;
+      const sourceHeight = userImg.naturalHeight || userImg.height;
+      const fitScale = Math.min(1, previewSize / sourceWidth, previewSize / sourceHeight);
+      const previewDrawWidth = sourceWidth * fitScale;
+      const previewDrawHeight = sourceHeight * fitScale;
+      const drawWidth = previewDrawWidth * scaleFactor;
+      const drawHeight = previewDrawHeight * scaleFactor;
+      const drawX = userImgPos.x * scaleFactor;
+      const drawY = userImgPos.y * scaleFactor;
+
+      ctx.save();
+      ctx.translate(drawX + drawWidth / 2, drawY + drawHeight / 2);
       ctx.rotate((userRotate * Math.PI) / 180);
       ctx.scale(userScale / 100, userScale / 100);
-      ctx.drawImage(userImg, -size / 2, -size / 2, size, size);
+      ctx.drawImage(userImg, -drawWidth / 2, -drawHeight / 2, drawWidth, drawHeight);
       ctx.restore();
     }
     const frameImg = new Image();

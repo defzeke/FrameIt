@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 interface FramePreviewProps {
@@ -20,56 +21,98 @@ export default function FramePreview({
 	userImgPos = { x: 0, y: 0 },
 	onImageDrag
 }: FramePreviewProps) {
-	const handleMouseDown = (e: React.MouseEvent<HTMLImageElement>) => {
+	const [dragging, setDragging] = useState(false);
+	const dragStateRef = useRef<{
+		pointerId: number;
+		startClientX: number;
+		startClientY: number;
+		startX: number;
+		startY: number;
+	} | null>(null);
+
+	const handlePointerDown = (e: React.PointerEvent<HTMLImageElement>) => {
 		if (!onImageDrag || !userImage) return;
-		
-		const startX = e.clientX - userImgPos.x;
-		const startY = e.clientY - userImgPos.y;
 
-		const handleMouseMove = (moveEvent: MouseEvent) => {
-			const newX = moveEvent.clientX - startX;
-			const newY = moveEvent.clientY - startY;
-			onImageDrag({ x: newX, y: newY });
+		e.preventDefault();
+		dragStateRef.current = {
+			pointerId: e.pointerId,
+			startClientX: e.clientX,
+			startClientY: e.clientY,
+			startX: userImgPos.x,
+			startY: userImgPos.y,
 		};
-
-		const handleMouseUp = () => {
-			document.removeEventListener('mousemove', handleMouseMove);
-			document.removeEventListener('mouseup', handleMouseUp);
-		};
-
-		document.addEventListener('mousemove', handleMouseMove);
-		document.addEventListener('mouseup', handleMouseUp);
+		setDragging(true);
+		document.body.style.userSelect = 'none';
+		document.body.style.cursor = 'grabbing';
 	};
+
+	useEffect(() => {
+		if (!onImageDrag) return;
+
+		const handlePointerMove = (event: PointerEvent) => {
+			const dragState = dragStateRef.current;
+			if (!dragState || event.pointerId !== dragState.pointerId) return;
+
+			const dx = event.clientX - dragState.startClientX;
+			const dy = event.clientY - dragState.startClientY;
+			onImageDrag({
+				x: dragState.startX + dx,
+				y: dragState.startY + dy,
+			});
+		};
+
+		const endDrag = (event: PointerEvent) => {
+			const dragState = dragStateRef.current;
+			if (!dragState || event.pointerId !== dragState.pointerId) return;
+
+			dragStateRef.current = null;
+			setDragging(false);
+			document.body.style.userSelect = '';
+			document.body.style.cursor = '';
+		};
+
+		window.addEventListener('pointermove', handlePointerMove);
+		window.addEventListener('pointerup', endDrag);
+		window.addEventListener('pointercancel', endDrag);
+
+		return () => {
+			window.removeEventListener('pointermove', handlePointerMove);
+			window.removeEventListener('pointerup', endDrag);
+			window.removeEventListener('pointercancel', endDrag);
+			document.body.style.userSelect = '';
+			document.body.style.cursor = '';
+		};
+	}, [onImageDrag]);
+
 	return (
 		<div className="flex flex-col items-center">
 			<div 
 				id="frame-preview"
-				className="relative w-[500px] h-[500px] md:w-[620px] md:h-[620px] shadow-2xl overflow-hidden ml-10"
+				className="relative w-[320px] h-[320px] sm:w-[460px] sm:h-[460px] md:w-[620px] md:h-[620px] shadow-2xl overflow-hidden md:ml-10"
 				style={{
 					backgroundColor: frameColor
 				}}
 			>
 				<div className="absolute inset-0 flex items-center justify-center bg-white">
 					   {userImage ? (
-						   <Image
-							   src={userImage}
-							   alt="User uploaded"
-							   width={520}
-							   height={520}
-							   className="absolute cursor-move"
-							   style={{
-								   transform: `scale(${userScale / 100}) rotate(${userRotate}deg)`,
-								   transformOrigin: 'center',
-								   left: `${userImgPos.x}px`,
-								   top: `${userImgPos.y}px`,
-								   maxWidth: '100%',
-								   maxHeight: '100%'
-							   }}
-							   onMouseDown={handleMouseDown}
-							   draggable={false}
-							   unoptimized={userImage.startsWith('data:')}
-							   priority
-						   />
+							<img
+								src={userImage}
+								alt="User uploaded"
+								className="absolute select-none"
+								style={{
+									transform: `scale(${userScale / 100}) rotate(${userRotate}deg)`,
+									transformOrigin: 'center',
+									left: `${userImgPos.x}px`,
+									top: `${userImgPos.y}px`,
+									maxWidth: '100%',
+									maxHeight: '100%',
+									cursor: dragging ? 'grabbing' : 'grab',
+									touchAction: 'none',
+								}}
+								onPointerDown={handlePointerDown}
+								onDragStart={(event) => event.preventDefault()}
+								draggable={false}
+							/>
 					   ) : (
 						<div className="text-center text-gray-400">
 							<div className="text-6xl mb-2">📷</div>
